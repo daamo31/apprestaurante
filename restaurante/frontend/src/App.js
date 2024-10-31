@@ -1,5 +1,7 @@
+// src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { AppBar, Toolbar, Typography, Button, Container } from '@mui/material';
 import Menu from './Menu';
 import EmployeeSection from './EmployeeSection';
 import UserAccess from './UserAccess';
@@ -11,40 +13,45 @@ import Reservations from './Reservations';
 import Dishes from './Dishes';
 import UserLogin from './UserLogin';
 import UserRegister from './UserRegister';
-import ManageUsers from './ManageUsers'; // Importar el componente ManageUsers
+import ManageUsers from './ManageUsers';
 
 function App() {
   return (
     <Router>
       <div className="App">
-        <nav>
-          <ul>
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/menu">Menú</Link></li>
-          </ul>
-        </nav>
-        <Routes>
-          <Route exact path="/" element={
-            <>
-              <h1>Bienvenido a nuestro Restaurante</h1>
-              <Dishes />
-              <Link to="/reservations">Hacer Reserva</Link>
-            </>
-          } />
-          <Route path="/menu" element={<Menu />} />
-          <Route path="/dishes" element={<Dishes />} />
-          <Route path="/reservations" element={<Reservations />} />
-          <Route path="/employee-section" element={<EmployeeSection />} />
-          <Route path="/user-access" element={<UserAccess />} />
-          <Route path="/employee-login" element={<EmployeeLogin />} />
-          <Route path="/employee-register" element={<EmployeeRegister />} />
-          <Route path="/user-access" element={<UserAccess />} />
-          <Route path="/create-dish" element={<CreateDish />} />
-          <Route path="/user-login" element={<UserLogin />} />
-          <Route path="/user-register" element={<UserRegister />} />
-          <Route path="/manage-reservations" element={<ManageReservations />} />
-          <Route path="/manage-users" element={<ManageUsers />} /> {/* Añadir ruta para ManageUsers */}
-        </Routes>
+        <AppBar position="static">
+          <Toolbar>
+            <Typography variant="h6" style={{ flexGrow: 1 }}>
+              Restaurante
+            </Typography>
+            <Button color="inherit" component={Link} to="/">Home</Button>
+            <Button color="inherit" component={Link} to="/menu">Menú</Button>
+          </Toolbar>
+        </AppBar>
+        <Container>
+          <Routes>
+            <Route exact path="/" element={
+              <>
+                <Typography variant="h4" gutterBottom>Bienvenido a nuestro Restaurante</Typography>
+                <Dishes />
+                <Button variant="contained" color="primary" component={Link} to="/reservations">Hacer Reserva</Button>
+              </>
+            } />
+            <Route path="/menu" element={<Menu />} />
+            <Route path="/dishes" element={<Dishes />} />
+            <Route path="/reservations" element={<Reservations />} />
+            <Route path="/employee-section" element={<EmployeeSection />} />
+            <Route path="/user-access" element={<UserAccess />} />
+            <Route path="/employee-login" element={<EmployeeLogin />} />
+            <Route path="/employee-register" element={<EmployeeRegister />} />
+            <Route path="/user-access" element={<UserAccess />} />
+            <Route path="/create-dish" element={<CreateDish />} />
+            <Route path="/user-login" element={<UserLogin />} />
+            <Route path="/user-register" element={<UserRegister />} />
+            <Route path="/manage-reservations" element={<ManageReservations />} />
+            <Route path="/manage-users" element={<ManageUsers />} />
+          </Routes>
+        </Container>
       </div>
     </Router>
   );

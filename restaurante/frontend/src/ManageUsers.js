@@ -1,6 +1,7 @@
 // src/ManageUsers.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Container, Typography, Button, List, ListItem, ListItemText, Alert } from '@mui/material';
 
 function ManageUsers() {
   const [dishes, setDishes] = useState([]);
@@ -24,7 +25,8 @@ function ManageUsers() {
 
   const handlePlaceOrder = () => {
     const token = localStorage.getItem('access_token');
-    axios.post('http://localhost:8000/api/orders/', { dishes: order }, {
+    const dishIds = order.map(dish => dish.id); // Obtener solo los IDs de los platos
+    axios.post('http://localhost:8000/api/orders/', { dishes: dishIds }, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -40,26 +42,28 @@ function ManageUsers() {
   };
 
   return (
-    <div>
-      <h2>Manage Users</h2>
-      {error && <p className="error">{error}</p>}
-      <h3>Carta</h3>
-      <ul>
+    <Container>
+      <Typography variant="h4" gutterBottom>Manage Users</Typography>
+      {error && <Alert severity="error">{error}</Alert>}
+      <Typography variant="h5" gutterBottom>Carta</Typography>
+      <List>
         {dishes.map(dish => (
-          <li key={dish.id}>
-            {dish.name} - ${dish.price}
-            <button onClick={() => handleAddToOrder(dish)}>Add to Order</button>
-          </li>
+          <ListItem key={dish.id}>
+            <ListItemText primary={`${dish.name} - $${dish.price}`} />
+            <Button variant="contained" color="primary" onClick={() => handleAddToOrder(dish)}>Add to Order</Button>
+          </ListItem>
         ))}
-      </ul>
-      <h3>Your Order</h3>
-      <ul>
+      </List>
+      <Typography variant="h5" gutterBottom>Your Order</Typography>
+      <List>
         {order.map((dish, index) => (
-          <li key={index}>{dish.name} - ${dish.price}</li>
+          <ListItem key={index}>
+            <ListItemText primary={`${dish.name} - $${dish.price}`} />
+          </ListItem>
         ))}
-      </ul>
-      <button onClick={handlePlaceOrder}>Place Order</button>
-    </div>
+      </List>
+      <Button variant="contained" color="primary" onClick={handlePlaceOrder}>Place Order</Button>
+    </Container>
   );
 }
 

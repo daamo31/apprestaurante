@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { Container, TextField, Button, Typography, Alert } from '@mui/material';
 
 function UserLogin() {
   const [formData, setFormData] = useState({
@@ -33,15 +34,34 @@ function UserLogin() {
   };
 
   return (
-    <div>
-      <h2>User Login</h2>
-      {error && <p className="error">{error}</p>}
+    <Container maxWidth="sm">
+      <Typography variant="h4" gutterBottom>User Login</Typography>
+      {error && <Alert severity="error">{error}</Alert>}
       <form onSubmit={handleSubmit}>
-        <input type="text" name="username" placeholder="Username" value={formData.username} onChange={handleChange} required />
-        <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} required />
-        <button type="submit">Login</button>
+        <TextField
+          label="Username"
+          name="username"
+          value={formData.username}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+          required
+        />
+        <TextField
+          label="Password"
+          name="password"
+          type="password"
+          value={formData.password}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+          required
+        />
+        <Button type="submit" variant="contained" color="primary" fullWidth>
+          Login
+        </Button>
       </form>
-    </div>
+    </Container>
   );
 }
 

@@ -2,6 +2,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Button, Container } from '@mui/material';
+import { styled } from '@mui/system';
 import Menu from './Menu';
 import EmployeeSection from './EmployeeSection';
 import UserAccess from './UserAccess';
@@ -15,11 +16,19 @@ import UserLogin from './UserLogin';
 import UserRegister from './UserRegister';
 import ManageUsers from './ManageUsers';
 
+const AppBarStyled = styled(AppBar)({
+  marginBottom: '20px',
+});
+
+const ContainerStyled = styled(Container)({
+  marginTop: '20px',
+});
+
 function App() {
   return (
     <Router>
       <div className="App">
-        <AppBar position="static">
+        <AppBarStyled position="static">
           <Toolbar>
             <Typography variant="h6" style={{ flexGrow: 1 }}>
               Restaurante
@@ -27,8 +36,8 @@ function App() {
             <Button color="inherit" component={Link} to="/">Home</Button>
             <Button color="inherit" component={Link} to="/menu">Menú</Button>
           </Toolbar>
-        </AppBar>
-        <Container>
+        </AppBarStyled>
+        <ContainerStyled>
           <Routes>
             <Route exact path="/" element={
               <>
@@ -51,7 +60,7 @@ function App() {
             <Route path="/manage-reservations" element={<ManageReservations />} />
             <Route path="/manage-users" element={<ManageUsers />} />
           </Routes>
-        </Container>
+        </ContainerStyled>
       </div>
     </Router>
   );

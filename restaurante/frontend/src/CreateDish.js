@@ -1,6 +1,6 @@
-// src/CreateDish.js
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Container, Typography, TextField, Button } from '@mui/material';
 
 function CreateDish() {
   const [formData, setFormData] = useState({
@@ -8,7 +8,6 @@ function CreateDish() {
     description: '',
     price: '',
   });
-  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
     setFormData({
@@ -30,22 +29,47 @@ function CreateDish() {
       })
       .catch(error => {
         console.error('There was an error creating the dish!', error);
-        setError('Hubo un error al crear el plato. Por favor, inténtalo de nuevo más tarde.');
       });
   };
 
   return (
-    <div>
-      <h2>Create Dish</h2>
-      {error && <p className="error">{error}</p>}
+    <Container>
+      <Typography variant="h4" gutterBottom>Create Dish</Typography>
       <form onSubmit={handleSubmit}>
-        <input type="text" name="name" placeholder="Name" value={formData.name} onChange={handleChange} required />
-        <input type="text" name="description" placeholder="Description" value={formData.description} onChange={handleChange} required />
-        <input type="number" name="price" placeholder="Price" value={formData.price} onChange={handleChange} required />
-        <button type="submit">Create</button>
+        <TextField
+          label="Name"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+          required
+        />
+        <TextField
+          label="Description"
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+          required
+        />
+        <TextField
+          label="Price"
+          name="price"
+          type="number"
+          value={formData.price}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+          required
+        />
+        <Button type="submit" variant="contained" color="primary" fullWidth>
+          Create
+        </Button>
       </form>
-    </div>
+    </Container>
   );
 }
 
-export default CreateDish;
+export default CreateDish; 

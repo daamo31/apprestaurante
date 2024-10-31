@@ -1,10 +1,9 @@
-// src/Dishes.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Container, Typography, List, ListItem, ListItemText } from '@mui/material';
 
 function Dishes() {
   const [dishes, setDishes] = useState([]);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     axios.get('http://localhost:8000/api/dishes/')
@@ -13,20 +12,20 @@ function Dishes() {
       })
       .catch(error => {
         console.error('There was an error fetching the dishes!', error);
-        setError('Hubo un error al obtener los platos. Por favor, inténtalo de nuevo más tarde.');
       });
   }, []);
 
   return (
-    <div>
-      <h2>Menu</h2>
-      {error && <p className="error">{error}</p>}
-      <ul>
+    <Container>
+      <Typography variant="h4" gutterBottom>Dishes</Typography>
+      <List>
         {dishes.map(dish => (
-          <li key={dish.id}>{dish.name} - ${dish.price}</li>
+          <ListItem key={dish.id}>
+            <ListItemText primary={`${dish.name} - $${dish.price}`} secondary={dish.description} />
+          </ListItem>
         ))}
-      </ul>
-    </div>
+      </List>
+    </Container>
   );
 }
 

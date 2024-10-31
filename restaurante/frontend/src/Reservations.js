@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Container, Typography, TextField, Button, Alert } from '@mui/material';
 
 function Reservations() {
   const [formData, setFormData] = useState({
@@ -8,9 +9,10 @@ function Reservations() {
     phone: '',
     date: '',
     time: '',
-    guests: 1,
+    guests: '',
   });
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   const handleChange = (e) => {
     setFormData({
@@ -21,39 +23,101 @@ function Reservations() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData); // Verifica los datos antes de enviarlos
     axios.post('http://localhost:8000/api/reservations/', formData)
       .then(response => {
-        alert('Reservation made successfully!');
+        setSuccess('Reserva realizada con éxito.');
+        setError(null);
         setFormData({
           name: '',
           email: '',
           phone: '',
           date: '',
           time: '',
-          guests: 1,
+          guests: '',
         });
       })
       .catch(error => {
         console.error('There was an error making the reservation!', error);
-        setError('Hubo un error al hacer la reserva. Por favor, inténtalo de nuevo más tarde.');
+        setError('Hubo un error al realizar la reserva. Por favor, inténtalo de nuevo más tarde.');
+        setSuccess(null);
       });
   };
 
   return (
-    <div>
-      <h2>Make a Reservation</h2>
-      {error && <p className="error">{error}</p>}
+    <Container>
+      <Typography variant="h4" gutterBottom>Hacer Reserva</Typography>
+      {error && <Alert severity="error">{error}</Alert>}
+      {success && <Alert severity="success">{success}</Alert>}
       <form onSubmit={handleSubmit}>
-        <input type="text" name="name" placeholder="Name" value={formData.name} onChange={handleChange} required />
-        <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
-        <input type="text" name="phone" placeholder="Phone" value={formData.phone} onChange={handleChange} required />
-        <input type="date" name="date" value={formData.date} onChange={handleChange} required />
-        <input type="time" name="time" value={formData.time} onChange={handleChange} required />
-        <input type="number" name="guests" placeholder="Number of Guests" value={formData.guests} onChange={handleChange} required min="1" />
-        <button type="submit">Reserve</button>
+        <TextField
+          label="Nombre"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+          required
+        />
+        <TextField
+          label="Correo Electrónico"
+          name="email"
+          type="email"
+          value={formData.email}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+          required
+        />
+        <TextField
+          label="Teléfono"
+          name="phone"
+          value={formData.phone}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+          required
+        />
+        <TextField
+          label="Fecha"
+          name="date"
+          type="date"
+          value={formData.date}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          required
+        />
+        <TextField
+          label="Hora"
+          name="time"
+          type="time"
+          value={formData.time}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          required
+        />
+        <TextField
+          label="Número de Invitados"
+          name="guests"
+          type="number"
+          value={formData.guests}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+          required
+        />
+        <Button type="submit" variant="contained" color="primary" fullWidth>
+          Hacer Reserva
+        </Button>
       </form>
-    </div>
+    </Container>
   );
 }
 

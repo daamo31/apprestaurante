@@ -1,16 +1,24 @@
-// src/EmployeeSection.js
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Typography, List, ListItem, Button, Container } from '@mui/material';
 
 function EmployeeSection() {
   return (
-    <div>
-      <h2>Sección de Empleados</h2>
-      <ul>
-        <li><Link to="/employee-login">Login de Empleados</Link></li>
-        <li><Link to="/employee-register">Crear Empleado</Link></li>
-      </ul>
-    </div>
+    <Container>
+      <Typography variant="h4" gutterBottom>Sección de Empleados</Typography>
+      <List>
+        <ListItem>
+          <Button component={Link} to="/employee-login" variant="contained" color="primary">
+            Login de Empleados
+          </Button>
+        </ListItem>
+        <ListItem>
+          <Button component={Link} to="/employee-register" variant="contained" color="secondary">
+            Crear Empleado
+          </Button>
+        </ListItem>
+      </List>
+    </Container>
   );
 }
 

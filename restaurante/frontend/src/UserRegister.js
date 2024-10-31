@@ -1,6 +1,6 @@
-// src/UserRegister.js
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Container, TextField, Button, Typography, Alert } from '@mui/material';
 
 function UserRegister() {
   const [formData, setFormData] = useState({
@@ -8,6 +8,7 @@ function UserRegister() {
     password: '',
   });
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   const handleChange = (e) => {
     setFormData({
@@ -20,7 +21,8 @@ function UserRegister() {
     e.preventDefault();
     axios.post('http://localhost:8000/api/users/', formData)
       .then(response => {
-        alert('User registered successfully!');
+        setSuccess('User registered successfully!');
+        setError(null);
         setFormData({
           username: '',
           password: '',
@@ -29,19 +31,40 @@ function UserRegister() {
       .catch(error => {
         console.error('There was an error registering the user!', error);
         setError('Hubo un error al registrar al usuario. Por favor, inténtalo de nuevo más tarde.');
+        setSuccess(null);
       });
   };
 
   return (
-    <div>
-      <h2>Register User</h2>
-      {error && <p className="error">{error}</p>}
+    <Container maxWidth="sm">
+      <Typography variant="h4" gutterBottom>User Register</Typography>
+      {error && <Alert severity="error">{error}</Alert>}
+      {success && <Alert severity="success">{success}</Alert>}
       <form onSubmit={handleSubmit}>
-        <input type="text" name="username" placeholder="Username" value={formData.username} onChange={handleChange} required />
-        <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} required />
-        <button type="submit">Register</button>
+        <TextField
+          label="Username"
+          name="username"
+          value={formData.username}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+          required
+        />
+        <TextField
+          label="Password"
+          name="password"
+          type="password"
+          value={formData.password}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+          required
+        />
+        <Button type="submit" variant="contained" color="primary" fullWidth>
+          Register
+        </Button>
       </form>
-    </div>
+    </Container>
   );
 }
 

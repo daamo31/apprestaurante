@@ -1,28 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import CreateDish from './CreateDish';
+import { Container, Typography, List, ListItem, ListItemText, Button, TextField, Alert } from '@mui/material';
 
 function ManageReservations() {
   const [reservations, setReservations] = useState([]);
-  const [error, setError] = useState(null);
   const [editReservation, setEditReservation] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchReservations = async () => {
-      try {
-        const response = await axios.get('http://localhost:8000/api/reservations/', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('access_token')}`
-          }
-        });
+    axios.get('http://localhost:8000/api/reservations/', {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`
+      }
+    })
+      .then(response => {
         setReservations(response.data);
-      } catch (error) {
+      })
+      .catch(error => {
         console.error('There was an error fetching the reservations!', error);
         setError('Hubo un error al obtener las reservas. Por favor, inténtalo de nuevo más tarde.');
-      }
-    };
-
-    fetchReservations();
+      });
   }, []);
 
   const handleDelete = async (id) => {
@@ -67,31 +64,87 @@ function ManageReservations() {
   };
 
   return (
-    <div>
-      <h2>Manage Reservations</h2>
-      {error && <p className="error">{error}</p>}
-      <ul>
+    <Container>
+      <Typography variant="h4" gutterBottom>Manage Reservations</Typography>
+      {error && <Alert severity="error">{error}</Alert>}
+      <List>
         {reservations.map(reservation => (
-          <li key={reservation.id}>
-            {reservation.name} - {reservation.date} at {reservation.time}
-            <button onClick={() => handleEdit(reservation)}>Edit</button>
-            <button onClick={() => handleDelete(reservation.id)}>Delete</button>
-          </li>
+          <ListItem key={reservation.id}>
+            <ListItemText primary={`${reservation.name} - ${reservation.date} at ${reservation.time}`} />
+            <Button variant="contained" color="primary" onClick={() => handleEdit(reservation)}>Edit</Button>
+            <Button variant="contained" color="secondary" onClick={() => handleDelete(reservation.id)}>Delete</Button>
+          </ListItem>
         ))}
-      </ul>
+      </List>
       {editReservation && (
         <form onSubmit={handleUpdate}>
-          <input type="text" name="name" value={editReservation.name} onChange={handleChange} required />
-          <input type="email" name="email" value={editReservation.email} onChange={handleChange} required />
-          <input type="text" name="phone" value={editReservation.phone} onChange={handleChange} required />
-          <input type="date" name="date" value={editReservation.date} onChange={handleChange} required />
-          <input type="time" name="time" value={editReservation.time} onChange={handleChange} required />
-          <input type="number" name="guests" value={editReservation.guests} onChange={handleChange} required />
-          <button type="submit">Update Reservation</button>
+          <TextField
+            label="Name"
+            name="name"
+            value={editReservation.name}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            label="Email"
+            name="email"
+            value={editReservation.email}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            label="Phone"
+            name="phone"
+            value={editReservation.phone}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            label="Date"
+            name="date"
+            type="date"
+            value={editReservation.date}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            required
+          />
+          <TextField
+            label="Time"
+            name="time"
+            type="time"
+            value={editReservation.time}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            required
+          />
+          <TextField
+            label="Guests"
+            name="guests"
+            type="number"
+            value={editReservation.guests}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <Button type="submit" variant="contained" color="primary">Update Reservation</Button>
         </form>
       )}
-      <CreateDish />
-    </div>
+    </Container>
   );
 }
 

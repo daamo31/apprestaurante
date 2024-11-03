@@ -1,7 +1,7 @@
-// src/ManageUsers.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Container, Typography, Button, List, ListItem, ListItemText, Alert } from '@mui/material';
+import { Link } from 'react-router-dom'; 
 
 function ManageUsers() {
   const [dishes, setDishes] = useState([]);
@@ -63,6 +63,7 @@ function ManageUsers() {
         ))}
       </List>
       <Button variant="contained" color="primary" onClick={handlePlaceOrder}>Place Order</Button>
+      <Button variant="contained" color="primary" component={Link} to="/reservations">Hacer Reserva</Button>
     </Container>
   );
 }

@@ -1,10 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Container, Typography, List, ListItem, ListItemText, Button, TextField, Alert } from '@mui/material';
+import { Container, Typography, Button, TextField, Alert } from '@mui/material';
+import { Link } from 'react-router-dom';
+import TableMap from './TableMap';
+import { DndContext, closestCenter } from '@dnd-kit/core';
+import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+
+function SortableItem(props) {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: props.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    marginBottom: '10px',
+    padding: '10px',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+      <Typography variant="body1">
+        {props.reservation.name} - {props.reservation.date} at {props.reservation.time}
+      </Typography>
+    </div>
+  );
+}
 
 function ManageReservations() {
   const [reservations, setReservations] = useState([]);
   const [editReservation, setEditReservation] = useState(null);
+  const [selectedTable, setSelectedTable] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -17,136 +45,43 @@ function ManageReservations() {
         setReservations(response.data);
       })
       .catch(error => {
-        console.error('There was an error fetching the reservations!', error);
         setError('Hubo un error al obtener las reservas. Por favor, inténtalo de nuevo más tarde.');
       });
   }, []);
 
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`http://localhost:8000/api/reservations/${id}/`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`
-        }
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      setReservations((items) => {
+        const oldIndex = items.findIndex(item => item.id === active.id);
+        const newIndex = items.findIndex(item => item.id === over.id);
+        return arrayMove(items, oldIndex, newIndex);
       });
-      setReservations(reservations.filter(reservation => reservation.id !== id));
-    } catch (error) {
-      console.error('There was an error deleting the reservation!', error);
-      setError('Hubo un error al eliminar la reserva. Por favor, inténtalo de nuevo más tarde.');
     }
-  };
-
-  const handleEdit = (reservation) => {
-    setEditReservation(reservation);
-  };
-
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.put(`http://localhost:8000/api/reservations/${editReservation.id}/`, editReservation, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`
-        }
-      });
-      setReservations(reservations.map(reservation => reservation.id === editReservation.id ? editReservation : reservation));
-      setEditReservation(null);
-    } catch (error) {
-      console.error('There was an error updating the reservation!', error);
-      setError('Hubo un error al actualizar la reserva. Por favor, inténtalo de nuevo más tarde.');
-    }
-  };
-
-  const handleChange = (e) => {
-    setEditReservation({
-      ...editReservation,
-      [e.target.name]: e.target.value,
-    });
   };
 
   return (
     <Container>
-      <Typography variant="h4" gutterBottom>Manage Reservations</Typography>
+      <Typography variant="h4" gutterBottom>Gestionar Reservas</Typography>
       {error && <Alert severity="error">{error}</Alert>}
-      <List>
-        {reservations.map(reservation => (
-          <ListItem key={reservation.id}>
-            <ListItemText primary={`${reservation.name} - ${reservation.date} at ${reservation.time}`} />
-            <Button variant="contained" color="primary" onClick={() => handleEdit(reservation)}>Edit</Button>
-            <Button variant="contained" color="secondary" onClick={() => handleDelete(reservation.id)}>Delete</Button>
-          </ListItem>
-        ))}
-      </List>
-      {editReservation && (
-        <form onSubmit={handleUpdate}>
-          <TextField
-            label="Name"
-            name="name"
-            value={editReservation.name}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-            required
-          />
-          <TextField
-            label="Email"
-            name="email"
-            value={editReservation.email}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-            required
-          />
-          <TextField
-            label="Phone"
-            name="phone"
-            value={editReservation.phone}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-            required
-          />
-          <TextField
-            label="Date"
-            name="date"
-            type="date"
-            value={editReservation.date}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            required
-          />
-          <TextField
-            label="Time"
-            name="time"
-            type="time"
-            value={editReservation.time}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            required
-          />
-          <TextField
-            label="Guests"
-            name="guests"
-            type="number"
-            value={editReservation.guests}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-            required
-          />
-          <Button type="submit" variant="contained" color="primary">Update Reservation</Button>
-        </form>
-      )}
+      <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <SortableContext items={reservations} strategy={verticalListSortingStrategy}>
+          <Typography variant="h5" gutterBottom>Reservas</Typography>
+          {reservations.map((reservation) => (
+            <SortableItem key={reservation.id} id={reservation.id} reservation={reservation} />
+          ))}
+        </SortableContext>
+      </DndContext>
+      <TableMap
+        selectedTable={selectedTable}
+        setSelectedTable={setSelectedTable}
+        guests={editReservation ? editReservation.guests : 0}
+        reservations={reservations}
+        setReservations={setReservations}
+      />
     </Container>
   );
 }
 
 export default ManageReservations;
-

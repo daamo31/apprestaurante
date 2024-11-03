@@ -48,6 +48,8 @@ class Reservation(models.Model):
     date = models.DateField()
     time = models.TimeField()
     guests = models.IntegerField()
+    table_id = models.IntegerField(null=True, blank=True)  # Añadir campo para la mesa
+
 
     def __str__(self):
         return f'Reservation for {self.name} on {self.date} at {self.time}'
@@ -59,3 +61,15 @@ class Order(models.Model):
 
     def __str__(self):
         return f'Order {self.id} by {self.user.username}'
+    
+
+class Table(models.Model):
+    seats = models.IntegerField()
+
+    def __str__(self):
+        return f'Table {self.id} with {self.seats} seats'
+
+class Customer(models.Model):  # Asegúrate de que este modelo esté definido
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    phone = models.CharField(max_length=15)
+    address = models.CharField(max_length=255)

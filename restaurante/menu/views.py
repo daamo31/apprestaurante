@@ -1,6 +1,6 @@
-from rest_framework import viewsets, permissions
-from .models import User, Employee, Dish, Reservation, Order
-from .serializers import UserSerializer, EmployeeSerializer, DishSerializer, ReservationSerializer, OrderSerializer
+from rest_framework import viewsets, permissions, generics
+from .models import User, Employee, Dish, Reservation, Order, Table, Customer
+from .serializers import UserSerializer, EmployeeSerializer, DishSerializer, ReservationSerializer, OrderSerializer, TableSerializer, CustomerSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -54,6 +54,10 @@ class ReservationViewSet(viewsets.ModelViewSet):
         print(request.data)  # Verifica los datos recibidos
         return super().create(request, *args, **kwargs)
 
+    def update(self, request, *args, **kwargs):
+        print(request.data)  # Verifica los datos recibidos
+        return super().update(request, *args, **kwargs)
+
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
@@ -62,3 +66,15 @@ class OrderViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         print(request.data)  # Verifica los datos recibidos
         return super().create(request, *args, **kwargs)
+
+class TableViewSet(viewsets.ModelViewSet):
+    queryset = Table.objects.all()
+    serializer_class = TableSerializer
+
+class CustomerViewSet(viewsets.ModelViewSet):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
+
+class TableListView(generics.ListAPIView):
+    queryset = Table.objects.all()
+    serializer_class = TableSerializer

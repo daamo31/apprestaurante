@@ -215,44 +215,7 @@ function Reservations() {
           Hacer Reserva
         </Button>
       </form>
-      <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext items={reservations} strategy={verticalListSortingStrategy}>
-          <Typography variant="h5" gutterBottom>Reservas</Typography>
-          {reservations.map((reservation) => (
-            <SortableItem key={reservation.id} id={reservation.id} reservation={reservation} />
-          ))}
-        </SortableContext>
-      </DndContext>
-      <Typography variant="h5" gutterBottom>Mesas</Typography>
-      <Grid container spacing={2}>
-        {tables.map((table) => (
-          <Grid item xs={3} key={table.id}>
-            <Paper
-              elevation={3}
-              style={{
-                padding: '10px',
-                backgroundColor: 'white',
-                color: 'black',
-              }}
-            >
-              <Typography variant="h6">Mesa {table.id}</Typography>
-              <Typography variant="body1">Asientos: {table.seats}</Typography>
-              {reservations.filter(reservation => reservation.table_id === table.id).map(reservation => (
-                <Typography key={reservation.id} variant="body2">
-                  {reservation.name} - {reservation.date} at {reservation.time}
-                </Typography>
-              ))}
-            </Paper>
-          </Grid>
-        ))}
-      </Grid>
-      <TableMap
-        selectedTable={selectedTable}
-        setSelectedTable={setSelectedTable}
-        guests={formData.guests}
-        reservations={reservations}
-        setReservations={setReservations} // Pasar setReservations como prop
-      />
+      
     </Container>
   );
 }

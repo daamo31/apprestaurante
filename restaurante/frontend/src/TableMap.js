@@ -100,4 +100,4 @@ function TableMap({ selectedTable, setSelectedTable, guests, reservations, setRe
   );
 }
 
-export default TableMap;
+export default TableMap; 

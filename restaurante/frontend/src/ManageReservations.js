@@ -112,6 +112,7 @@ function ManageReservations() {
         selectedTable={selectedTable}
         setSelectedTable={setSelectedTable} // Pasar setSelectedTable como prop
         selectedDate={selectedDate} // Pasar selectedDate como prop
+        guests={filteredReservations.length > 0 ? filteredReservations[0].guests : 0} // Pasar el número de comensales como prop
       />
     </Container>
   );

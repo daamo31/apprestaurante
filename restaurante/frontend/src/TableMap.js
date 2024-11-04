@@ -63,7 +63,7 @@ function TableMap({ selectedTable, setSelectedTable, guests, reservations, setRe
       <SortableContext items={tables} strategy={verticalListSortingStrategy}>
         <Grid container spacing={2}>
           {tables.map((table) => {
-            const tableReservations = reservations.filter(reservation => reservation.table_id === table.id && reservation.date === selectedDate);
+            const tableReservations = reservations.filter(reservation => reservation.table_id === table.id && (!selectedDate || reservation.date === selectedDate));
             const hasReservations = tableReservations.length > 0;
             return (
               <Grid item xs={3} key={table.id}>

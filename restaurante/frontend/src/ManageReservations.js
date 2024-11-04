@@ -23,7 +23,7 @@ function SortableItem(props) {
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       <Typography variant="body1">
-        {props.reservation.name} - {props.reservation.date} at {props.reservation.time} - {props.reservation.guests} comensales
+        {props.reservation.name} - {props.reservation.date} at {props.reservation.time} - {props.reservation.guests} comensales - Mesa {props.reservation.table_id}
       </Typography>
     </div>
   );
@@ -78,6 +78,10 @@ function ManageReservations() {
       });
   };
 
+  const filteredReservations = selectedDate
+    ? reservations.filter(reservation => reservation.date === selectedDate)
+    : reservations;
+
   return (
     <Container>
       <Typography variant="h4" gutterBottom>Gestionar Reservas</Typography>
@@ -94,15 +98,15 @@ function ManageReservations() {
         margin="normal"
       />
       <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext items={reservations} strategy={verticalListSortingStrategy}>
+        <SortableContext items={filteredReservations} strategy={verticalListSortingStrategy}>
           <Typography variant="h5" gutterBottom>Reservas</Typography>
-          {reservations.map((reservation) => (
+          {filteredReservations.map((reservation) => (
             <SortableItem key={reservation.id} id={reservation.id.toString()} reservation={reservation} />
           ))}
         </SortableContext>
       </DndContext>
       <TableMap
-        reservations={reservations}
+        reservations={filteredReservations}
         setReservations={setReservations}
         setError={setError} // Pasar setError como prop
         selectedTable={selectedTable}

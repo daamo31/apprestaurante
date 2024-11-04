@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Container, Typography, Button, TextField, Alert } from '@mui/material';
-import { Link } from 'react-router-dom';
-import TableMap from './TableMap';
+import { Container, Typography, Alert, TextField } from '@mui/material';
 import { DndContext, closestCenter } from '@dnd-kit/core';
-import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import TableMap from './TableMap'; // Importar el componente TableMap
+import { tables } from './tablesConfig'; // Importar la configuración de las mesas
 
 function SortableItem(props) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: props.id });
@@ -23,7 +23,7 @@ function SortableItem(props) {
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       <Typography variant="body1">
-        {props.reservation.name} - {props.reservation.date} at {props.reservation.time}
+        {props.reservation.name} - {props.reservation.date} at {props.reservation.time} - {props.reservation.guests} comensales
       </Typography>
     </div>
   );
@@ -31,8 +31,8 @@ function SortableItem(props) {
 
 function ManageReservations() {
   const [reservations, setReservations] = useState([]);
-  const [editReservation, setEditReservation] = useState(null);
   const [selectedTable, setSelectedTable] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(''); // Estado para la fecha seleccionada
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -52,33 +52,62 @@ function ManageReservations() {
   const handleDragEnd = (event) => {
     const { active, over } = event;
 
-    if (active.id !== over.id) {
-      setReservations((items) => {
-        const oldIndex = items.findIndex(item => item.id === active.id);
-        const newIndex = items.findIndex(item => item.id === over.id);
-        return arrayMove(items, oldIndex, newIndex);
+    if (!over) return;
+
+    const reservationId = parseInt(active.id, 10);
+    const tableId = selectedTable;
+
+    setReservations((prevReservations) =>
+      prevReservations.map((reservation) =>
+        reservation.id === reservationId ? { ...reservation, table_id: tableId } : reservation
+      )
+    );
+
+    // Enviar una solicitud al servidor para actualizar la reserva con la mesa seleccionada
+    axios.put(`http://localhost:8000/api/reservations/${reservationId}/`, { table_id: tableId }, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`
+      }
+    })
+      .then(response => {
+        console.log('Reserva actualizada con éxito');
+      })
+      .catch(error => {
+        console.error('Hubo un error al actualizar la reserva', error);
+        setError('Hubo un error al actualizar la reserva. Por favor, inténtalo de nuevo más tarde.');
       });
-    }
   };
 
   return (
     <Container>
       <Typography variant="h4" gutterBottom>Gestionar Reservas</Typography>
       {error && <Alert severity="error">{error}</Alert>}
+      <TextField
+        label="Fecha"
+        type="date"
+        value={selectedDate}
+        onChange={(e) => setSelectedDate(e.target.value)}
+        InputLabelProps={{
+          shrink: true,
+        }}
+        fullWidth
+        margin="normal"
+      />
       <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={reservations} strategy={verticalListSortingStrategy}>
           <Typography variant="h5" gutterBottom>Reservas</Typography>
           {reservations.map((reservation) => (
-            <SortableItem key={reservation.id} id={reservation.id} reservation={reservation} />
+            <SortableItem key={reservation.id} id={reservation.id.toString()} reservation={reservation} />
           ))}
         </SortableContext>
       </DndContext>
       <TableMap
-        selectedTable={selectedTable}
-        setSelectedTable={setSelectedTable}
-        guests={editReservation ? editReservation.guests : 0}
         reservations={reservations}
         setReservations={setReservations}
+        setError={setError} // Pasar setError como prop
+        selectedTable={selectedTable}
+        setSelectedTable={setSelectedTable} // Pasar setSelectedTable como prop
+        selectedDate={selectedDate} // Pasar selectedDate como prop
       />
     </Container>
   );

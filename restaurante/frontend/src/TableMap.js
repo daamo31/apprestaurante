@@ -1,7 +1,8 @@
 import React from 'react';
+import axios from 'axios';
 import { Grid, Paper, Typography, Button } from '@mui/material';
 import { DndContext, closestCenter } from '@dnd-kit/core';
-import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { tables } from './tablesConfig';
@@ -27,49 +28,72 @@ function SortableItem(props) {
   );
 }
 
-function TableMap({ selectedTable, setSelectedTable, guests, reservations, setReservations }) {
+function TableMap({ selectedTable, setSelectedTable, guests, reservations, setReservations, selectedDate, setError }) { // Asegúrate de recibir setError como prop
   const handleDragEnd = (event) => {
     const { active, over } = event;
 
-    if (active.id !== over.id) {
-      setReservations((items) => {
-        const oldIndex = items.findIndex(item => item.id === active.id);
-        const newIndex = items.findIndex(item => item.id === over.id);
-        return arrayMove(items, oldIndex, newIndex);
+    if (!over) return;
+
+    const reservationId = parseInt(active.id, 10);
+    const tableId = parseInt(over.id.replace('table-', ''), 10);
+
+    setReservations((prevReservations) =>
+      prevReservations.map((reservation) =>
+        reservation.id === reservationId ? { ...reservation, table_id: tableId } : reservation
+      )
+    );
+
+    // Enviar una solicitud al servidor para actualizar la reserva con la nueva mesa
+    axios.put(`http://localhost:8000/api/reservations/${reservationId}/`, { table_id: tableId }, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`
+      }
+    })
+      .then(response => {
+        console.log('Reserva actualizada con éxito');
+      })
+      .catch(error => {
+        console.error('Hubo un error al actualizar la reserva', error);
+        setError('Hubo un error al actualizar la reserva. Por favor, inténtalo de nuevo más tarde.');
       });
-    }
   };
 
   return (
     <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <SortableContext items={tables} strategy={verticalListSortingStrategy}>
         <Grid container spacing={2}>
-          {tables.map((table) => (
-            <Grid item xs={3} key={table.id}>
-              <Paper
-                elevation={3}
-                style={{
-                  padding: '10px',
-                  backgroundColor: selectedTable === table.id ? 'lightgreen' : 'white',
-                  color: selectedTable === table.id ? 'black' : 'white',
-                }}
-              >
-                <Typography variant="h6">Mesa {table.id}</Typography>
-                <Typography variant="body1">Asientos: {table.seats}</Typography>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  disabled={table.seats < guests}
-                  onClick={() => setSelectedTable(table.id)}
+          {tables.map((table) => {
+            const tableReservations = reservations.filter(reservation => reservation.table_id === table.id && reservation.date === selectedDate);
+            const hasReservations = tableReservations.length > 0;
+            return (
+              <Grid item xs={3} key={table.id}>
+                <Paper
+                  elevation={3}
+                  style={{
+                    padding: '10px',
+                    backgroundColor: hasReservations ? 'red' : 'green',
+                    color: 'black',
+                  }}
+                  id={`table-${table.id}`}
+                  onClick={() => setSelectedTable(table.id)} // Seleccionar la mesa al hacer clic
                 >
-                  Seleccionar
-                </Button>
-                {reservations.filter(reservation => reservation.table_id === table.id).map(reservation => (
-                  <SortableItem key={reservation.id} id={reservation.id} reservation={reservation} />
-                ))}
-              </Paper>
-            </Grid>
-          ))}
+                  <Typography variant="h6">Mesa {table.id}</Typography>
+                  <Typography variant="body1">Asientos: {table.seats}</Typography>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={table.seats < guests}
+                    onClick={() => setSelectedTable(table.id)}
+                  >
+                    Seleccionar
+                  </Button>
+                  {tableReservations.map(reservation => (
+                    <SortableItem key={reservation.id} id={reservation.id.toString()} reservation={reservation} />
+                  ))}
+                </Paper>
+              </Grid>
+            );
+          })}
         </Grid>
       </SortableContext>
     </DndContext>

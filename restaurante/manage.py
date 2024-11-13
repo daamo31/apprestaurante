@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-"""Django's command-line utility for administrative tasks."""
 import os
 import sys
-
+import threading
+from  restaurante.chatbot import start_chatbot
 
 def main():
     """Run administrative tasks."""
@@ -17,6 +17,7 @@ def main():
         ) from exc
     execute_from_command_line(sys.argv)
 
-
 if __name__ == "__main__":
+    # Iniciar el chatbot en un hilo separado
+    threading.Thread(target=start_chatbot).start()
     main()

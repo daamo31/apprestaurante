@@ -1,0 +1,29 @@
+{
+  "intents": [
+    {
+      "tag": "saludo",
+      "patterns": ["Hola", "¿Cómo estás?", "Buenos días", "Buenas tardes"],
+      "responses": ["¡Hola!", "¿Cómo puedo ayudarte?", "¡Hola! ¿Cómo estás?"]
+    },
+    {
+      "tag": "despedida",
+      "patterns": ["Adiós", "Nos vemos", "Hasta luego"],
+      "responses": ["¡Adiós!", "¡Nos vemos!", "¡Hasta luego!"]
+    },
+    {
+      "tag": "gracias",
+      "patterns": ["Gracias", "Muchas gracias", "Te lo agradezco"],
+      "responses": ["¡De nada!", "¡Con gusto!", "¡No hay problema!"]
+    },
+    {
+      "tag": "precio_plato",
+      "patterns": ["¿Cuánto cuesta el [plato]?", "Precio de [plato]", "¿Cuál es el precio de [plato]?"],
+      "responses": ["El precio de {plato} es {precio}."]
+    },
+    {
+      "tag": "listar_platos",
+      "patterns": ["¿Qué platos tienen?", "Lista de platos", "¿Qué hay en el menú?"],
+      "responses": ["Estos son los platos disponibles: {platos}"]
+    }
+  ]
+}

@@ -115,14 +115,16 @@ def get_response(ints, intents_json, message):
     for i in list_of_intents:
         if i['tag'] == tag:
             if tag == "precio_plato":
-                plato = message.split()[-1]  # Suponiendo que el nombre del plato es la última palabra
+                plato = message.split()[-2]  # Suponiendo que el nombre del plato es la última palabra
                 precio = obtener_precio_plato(plato)
-                result = f"El precio de {plato} es {precio}."
+                result = f"El precio para {plato} es {precio}."
             elif tag == "listar_platos":
                 platos = listar_platos()
                 result = f"Estos son los platos disponibles: {platos}"
             elif tag == "crear_usuario":
-                result = "Para crear un usuario, visita la siguiente página:<a href='http://localhost:3000/user-register'>crear usuario</a>"
+                result = "Para crear un usuario, visita la siguiente página: <a href='http://localhost:3000/user-register'>crear usuario</a>"
+            elif tag == "hacer_reserva":
+                result = "Para hacer una reserva, primero debes iniciar sesión. Por favor, proporciona tus credenciales."
             else:
                 result = random.choice(i['responses'])
             break

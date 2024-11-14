@@ -37,6 +37,31 @@
       "responses": [
         "Para crear un usuario, visita la siguiente página:<a href='http://localhost:3000/user-register'>crear usuario</a>"
       ]
+    },
+    {
+      "tag": "hacer_reserva",
+      "patterns": [
+        "¿Cómo hago una reserva?",
+        "Hacer una reserva",
+        "¿Cómo reservar una mesa?",
+        "Reserva de mesa"
+      ],
+      "responses": [
+        "Para hacer una reserva, visita la siguiente página: <a href='http://localhost:3000/reservation'>hacer una reserva</a>"
+      ]
+    },
+    {
+      "tag": "hacer_reserva",
+      "patterns": [
+        "¿Cómo hago una reserva?",
+        "Hacer una reserva",
+        "¿Cómo reservar una mesa?",
+        "Reserva de mesa"
+      ],
+      "responses": [
+        "Para hacer una reserva, primero debes iniciar sesión. Por favor, proporciona tus credenciales."
+      ]
     }
+    
   ]
 }

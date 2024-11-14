@@ -4,6 +4,24 @@ from .serializers import UserSerializer, EmployeeSerializer, DishSerializer, Res
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+   
+from django.http import JsonResponse
+from sqlalchemy import create_engine, MetaData, Table as SQLATable, select
+
+# Conectar a la base de datos SQLite
+DATABASE_URI = 'sqlite:///db.sqlite3'  # Cambia esto a tu URI de base de datos
+engine = create_engine(DATABASE_URI)
+metadata = MetaData()
+metadata.reflect(bind=engine)
+
+def get_dishes(request):
+    productos_table = SQLATable('menu_dish', metadata, autoload_with=engine)
+    conn = engine.connect()
+    select_stmt = select(productos_table.c.name, productos_table.c.description, productos_table.c.price)
+    result = conn.execute(select_stmt)
+    dishes = [dict(row) for row in result]
+    conn.close()
+    return JsonResponse(dishes, safe=False)
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -60,6 +78,7 @@ class ReservationViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(serializer.data)
+
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer

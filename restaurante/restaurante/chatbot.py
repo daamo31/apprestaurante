@@ -9,6 +9,7 @@ from sklearn.naive_bayes import MultinomialNB
 from flask import Flask, request, jsonify
 from flask_cors import CORS  # Importar CORS
 from sqlalchemy import create_engine, MetaData, Table, select
+from sqlalchemy.engine import ResultProxy
 import os
 
 # Descargar recursos necesarios de NLTK
@@ -135,11 +136,11 @@ def chatbot_response(text):
 def obtener_precio_plato(plato):
     productos_table = Table('menu_dish', metadata, autoload_with=engine)
     conn = engine.connect()
-    select_stmt = select([productos_table]).where(productos_table.c.name == plato)
+    select_stmt = select(productos_table.c.price).where(productos_table.c.name == plato)
     result = conn.execute(select_stmt).fetchone()
     conn.close()
     if result:
-        return result['price']
+        return result[0]  # Acceder al precio usando el índice
     else:
         return "no disponible"
 
@@ -147,9 +148,9 @@ def obtener_precio_plato(plato):
 def listar_platos():
     productos_table = Table('menu_dish', metadata, autoload_with=engine)
     conn = engine.connect()
-    select_stmt = select([productos_table])
+    select_stmt = select(productos_table.c.name)
     result = conn.execute(select_stmt)
-    platos = [row['name'] for row in result]
+    platos = [row[0] for row in result]  # Acceder al nombre usando el índice
     conn.close()
     return ", ".join(platos)
 
@@ -171,12 +172,12 @@ def chatbot():
     return jsonify({'response': response})
 
 @app.route('/dishes', methods=['GET'])
-def get_productos():
+def get_dishes():
     productos_table = Table('menu_dish', metadata, autoload_with=engine)
     conn = engine.connect()
-    select_stmt = select([productos_table])
+    select_stmt = select(productos_table.c.name, productos_table.c.description, productos_table.c.price)
     result = conn.execute(select_stmt)
-    dishes = [dict(row) for row in result]
+    dishes = [dict(zip(result.keys(), row)) for row in result.fetchall()]
     conn.close()
     return jsonify(dishes)
 

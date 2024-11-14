@@ -5,6 +5,7 @@
     "@dnd-kit/sortable": "^8.0.0",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@material-ui/core": "^4.12.4",
     "@mui/material": "^6.1.6",
     "react-router-dom": "^6.27.0"
   }

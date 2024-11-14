@@ -24,6 +24,19 @@
       "tag": "listar_platos",
       "patterns": ["¿Qué platos tienen?", "Lista de platos", "¿Qué hay en el menú?"],
       "responses": ["Estos son los platos disponibles: {platos}"]
+    },
+
+    {
+      "tag": "crear_usuario",
+      "patterns": [
+        "¿Cómo creo un usuario?",
+        "Crear usuario",
+        "¿Cómo registrarse?",
+        "Registro de usuario"
+      ],
+      "responses": [
+        "Para crear un usuario, visita la siguiente página:<a href='http://localhost:3000/user-register'>crear usuario</a>"
+      ]
     }
   ]
 }

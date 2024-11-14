@@ -8,7 +8,7 @@ import string
 from sklearn.naive_bayes import MultinomialNB
 from flask import Flask, request, jsonify
 from flask_cors import CORS  # Importar CORS
-from sqlalchemy import create_engine, MetaData, Table, select
+from sqlalchemy import create_engine, MetaData, Table, select, func
 from sqlalchemy.engine import ResultProxy
 import os
 
@@ -121,6 +121,8 @@ def get_response(ints, intents_json, message):
             elif tag == "listar_platos":
                 platos = listar_platos()
                 result = f"Estos son los platos disponibles: {platos}"
+            elif tag == "crear_usuario":
+                result = "Para crear un usuario, visita la siguiente página:<a href='http://localhost:3000/user-register'>crear usuario</a>"
             else:
                 result = random.choice(i['responses'])
             break
@@ -136,11 +138,11 @@ def chatbot_response(text):
 def obtener_precio_plato(plato):
     productos_table = Table('menu_dish', metadata, autoload_with=engine)
     conn = engine.connect()
-    select_stmt = select(productos_table.c.price).where(productos_table.c.name == plato)
+    select_stmt = select(productos_table.c.price).where(func.lower(productos_table.c.name) == plato.lower())
     result = conn.execute(select_stmt).fetchone()
     conn.close()
     if result:
-        return result[0]  # Acceder al precio usando el índice
+        return f"{result[0]:.2f} €"  # Formatear el precio con dos decimales y el símbolo del euro
     else:
         return "no disponible"
 

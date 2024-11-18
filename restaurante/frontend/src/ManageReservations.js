@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Container, Typography, Alert, TextField } from '@mui/material';
+import { Container, Typography, Alert, TextField, Button } from '@mui/material';
 import { DndContext, closestCenter } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import TableMap from './TableMap'; // Importar el componente TableMap
-import { tables } from './tablesConfig'; // Importar la configuración de las mesas
 
 function SortableItem(props) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: props.id });
@@ -18,6 +17,9 @@ function SortableItem(props) {
     padding: '10px',
     border: '1px solid #ccc',
     borderRadius: '4px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   };
 
   return (
@@ -25,6 +27,10 @@ function SortableItem(props) {
       <Typography variant="body1">
         {props.reservation.name} - {props.reservation.date} at {props.reservation.time} - {props.reservation.guests} comensales - Mesa {props.reservation.table_id}
       </Typography>
+      <div>
+        <Button onClick={() => props.onEdit(props.reservation)}>Editar</Button>
+        <Button onClick={() => props.onDelete(props.reservation.id)}>Eliminar</Button>
+      </div>
     </div>
   );
 }
@@ -78,6 +84,40 @@ function ManageReservations() {
       });
   };
 
+  const handleEdit = (reservation) => {
+    // Implementa la lógica para editar la reserva
+    const updatedReservation = { ...reservation, name: 'Nuevo Nombre' }; // Ejemplo de actualización
+    axios.put(`http://localhost:8000/api/reservations/${reservation.id}/`, updatedReservation, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`
+      }
+    })
+      .then(response => {
+        setReservations(reservations.map(res => res.id === reservation.id ? response.data : res));
+        console.log('Reserva actualizada con éxito');
+      })
+      .catch(error => {
+        console.error('Hubo un error al actualizar la reserva', error);
+        setError('Hubo un error al actualizar la reserva. Por favor, inténtalo de nuevo más tarde.');
+      });
+  };
+
+  const handleDelete = (id) => {
+    axios.delete(`http://localhost:8000/api/reservations/${id}/`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`
+      }
+    })
+      .then(response => {
+        setReservations(reservations.filter(reservation => reservation.id !== id));
+        console.log('Reserva eliminada con éxito');
+      })
+      .catch(error => {
+        console.error('Hubo un error al eliminar la reserva', error);
+        setError('Hubo un error al eliminar la reserva. Por favor, inténtalo de nuevo más tarde.');
+      });
+  };
+
   const filteredReservations = selectedDate
     ? reservations.filter(reservation => reservation.date === selectedDate)
     : reservations;
@@ -101,7 +141,13 @@ function ManageReservations() {
         <SortableContext items={filteredReservations} strategy={verticalListSortingStrategy}>
           <Typography variant="h5" gutterBottom>Reservas</Typography>
           {filteredReservations.map((reservation) => (
-            <SortableItem key={reservation.id} id={reservation.id.toString()} reservation={reservation} />
+            <SortableItem
+              key={reservation.id}
+              id={reservation.id.toString()}
+              reservation={reservation}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
           ))}
         </SortableContext>
       </DndContext>

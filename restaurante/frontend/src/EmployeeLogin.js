@@ -24,7 +24,7 @@ function EmployeeLogin() {
       .then(response => {
         localStorage.setItem('access_token', response.data.access);
         alert('Employee logged in successfully!');
-        navigate('/manage-reservations'); // Redirigir a ManageReservations
+        navigate('/dashboard'); // Redirigir a Dashboard
       })
       .catch(error => {
         console.error('There was an error logging in the employee!', error);

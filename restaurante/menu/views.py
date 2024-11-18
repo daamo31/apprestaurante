@@ -9,7 +9,7 @@ from django.http import JsonResponse
 from sqlalchemy import create_engine, MetaData, Table as SQLATable, select
 
 # Conectar a la base de datos SQLite
-DATABASE_URI = 'sqlite:///db.sqlite3'  # Cambia esto a tu URI de base de datos
+DATABASE_URI = 'sqlite:///db.sqlite3'  
 engine = create_engine(DATABASE_URI)
 metadata = MetaData()
 metadata.reflect(bind=engine)
@@ -78,6 +78,11 @@ class ReservationViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        reservation = self.get_object()
+        reservation.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()

@@ -163,7 +163,7 @@ app = Flask(__name__)
 CORS(app)  # Habilitar CORS
 
 # Conectar a la base de datos SQLite
-DATABASE_URI = 'sqlite:///db.sqlite3'  # Cambia esto a tu URI de base de datos
+DATABASE_URI = 'sqlite:///db.sqlite3'  
 engine = create_engine(DATABASE_URI)
 metadata = MetaData()
 metadata.reflect(bind=engine)

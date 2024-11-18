@@ -18,5 +18,7 @@ urlpatterns = [
     path('tables/', TableListView.as_view(), name='table-list'),
     path('dishes/', get_dishes, name='get_dishes'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/', include(router.urls)),
+
 
 ]

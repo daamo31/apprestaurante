@@ -16,7 +16,9 @@ import UserLogin from './UserLogin';
 import UserRegister from './UserRegister';
 import ManageUsers from './ManageUsers';
 import TableMap from './TableMap';
-import Chatbot from './Chatbot'; // Importa el componente del chatbot
+import Chatbot from './Chatbot';
+import Dashboard from './Dashboard';
+ // Importa el componente del chatbot
 
 const AppBarStyled = styled(AppBar)({
   marginBottom: '20px',
@@ -65,6 +67,7 @@ function App() {
           <Route path="/employee-login" element={<EmployeeLogin />} />
           <Route path="/employee-register" element={<EmployeeRegister />} />
           <Route path="/create-dish" element={<CreateDish />} />
+          <Route path="/dashboard" element={<Dashboard />} /> 
           <Route path="/user-login" element={<UserLogin />} />
           <Route path="/user-register" element={<UserRegister />} />
           <Route path="/manage-reservations" element={<ManageReservations />} />

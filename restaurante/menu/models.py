@@ -69,7 +69,7 @@ class Table(models.Model):
     def __str__(self):
         return f'Table {self.id} with {self.seats} seats'
 
-class Customer(models.Model):  # Asegúrate de que este modelo esté definido
+class Customer(models.Model):  
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone = models.CharField(max_length=15)
     address = models.CharField(max_length=255)

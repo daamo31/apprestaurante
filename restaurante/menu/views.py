@@ -1,4 +1,4 @@
-from rest_framework import viewsets, permissions, generics
+from rest_framework import viewsets, permissions, generics,status
 from .models import User, Employee, Dish, Reservation, Order, Table, Customer
 from .serializers import UserSerializer, EmployeeSerializer, DishSerializer, ReservationSerializer, OrderSerializer, TableSerializer, CustomerSerializer
 from rest_framework.decorators import action
@@ -74,10 +74,14 @@ class ReservationViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         reservation = self.get_object()
+        print("Datos recibidos para actualizar:", request.data)  # Agrega información de depuración
         serializer = self.get_serializer(reservation, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        return Response(serializer.data)
+        if serializer.is_valid():
+            self.perform_update(serializer)
+            return Response(serializer.data)
+        else:
+            print("Errores de validación:", serializer.errors)  # Agrega información de depuración
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, *args, **kwargs):
         reservation = self.get_object()

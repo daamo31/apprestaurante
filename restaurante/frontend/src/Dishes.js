@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Container, Typography, List, ListItem, ListItemText, ListItemAvatar, Avatar, Button, TextField } from '@mui/material';
+import { Container, Typography, List, ListItem, ListItemText, ListItemAvatar, Avatar, Button, Modal, Box, TextField } from '@mui/material';
 import { useAuth } from './AuthContext';
 
 function Dishes() {
   const [dishes, setDishes] = useState([]);
+  const [selectedDish, setSelectedDish] = useState(null);
   const [editingDish, setEditingDish] = useState(null);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -72,6 +73,14 @@ function Dishes() {
     });
   };
 
+  const handleOpenModal = (dish) => {
+    setSelectedDish(dish);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedDish(null);
+  };
+
   return (
     <Container>
       <Typography variant="h4" gutterBottom>Dishes</Typography>
@@ -114,17 +123,17 @@ function Dishes() {
       ) : (
         <List>
           {dishes.map(dish => (
-            <ListItem key={dish.id}>
+            <ListItem key={dish.id} button onClick={() => handleOpenModal(dish)}>
               <ListItemAvatar>
                 <Avatar src={dish.image} alt={dish.name} />
               </ListItemAvatar>
               <ListItemText primary={`${dish.name} - $${dish.price}`} secondary={dish.description} />
               {isEmployeeLoggedIn && (
                 <>
-                  <Button variant="contained" color="secondary" onClick={() => handleDelete(dish.id)}>
+                  <Button variant="contained" color="secondary" onClick={(e) => { e.stopPropagation(); handleDelete(dish.id); }}>
                     Delete
                   </Button>
-                  <Button variant="contained" color="primary" onClick={() => handleEdit(dish)}>
+                  <Button variant="contained" color="primary" onClick={(e) => { e.stopPropagation(); handleEdit(dish); }}>
                     Edit
                   </Button>
                 </>
@@ -133,6 +142,26 @@ function Dishes() {
           ))}
         </List>
       )}
+      <Modal
+        open={!!selectedDish}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+      >
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', boxShadow: 24, p: 4 }}>
+          {selectedDish && (
+            <>
+              <Typography id="modal-title" variant="h6" component="h2">
+                {selectedDish.name}
+              </Typography>
+              <img src={selectedDish.image} alt={selectedDish.name} style={{ width: '100%' }} />
+              <Typography id="modal-description" sx={{ mt: 2 }}>
+                {selectedDish.description}
+              </Typography>
+            </>
+          )}
+        </Box>
+      </Modal>
     </Container>
   );
 }

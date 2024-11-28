@@ -1,6 +1,6 @@
 # settings.py
 from pathlib import Path
-
+import os 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = "django-insecure-ffm4jx!b4$)^sih1@7ubddx#(ewfz_0za+frhu!^p6$!=7=yys"
@@ -39,6 +39,9 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 ROOT_URLCONF = "restaurante.urls"
 

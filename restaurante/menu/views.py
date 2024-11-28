@@ -1,13 +1,14 @@
-from rest_framework import viewsets, permissions, generics,status
+from rest_framework import viewsets, permissions, generics, status
 from .models import User, Employee, Dish, Reservation, Order, Table, Customer
 from .serializers import UserSerializer, EmployeeSerializer, DishSerializer, ReservationSerializer, OrderSerializer, TableSerializer, CustomerSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-   
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from sqlalchemy import create_engine, MetaData, Table as SQLATable, select
-
+from rest_framework.parsers import MultiPartParser, FormParser
+from django.shortcuts import render, redirect
+from .forms import DishForm
 # Conectar a la base de datos SQLite
 DATABASE_URI = 'sqlite:///db.sqlite3'  
 engine = create_engine(DATABASE_URI)
@@ -62,6 +63,20 @@ class EmployeeViewSet(viewsets.ModelViewSet):
 class DishViewSet(viewsets.ModelViewSet):
     queryset = Dish.objects.all()
     serializer_class = DishSerializer
+    parser_classes = (MultiPartParser, FormParser)
+
+    @action(detail=False, methods=['post'])
+    def upload_dish(self, request):
+        form = DishForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return Response({'status': 'success'}, status=status.HTTP_201_CREATED)
+        else:
+            return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['get'])
+    def success(self, request):
+        return HttpResponse('Successfully uploaded')
 
 class ReservationViewSet(viewsets.ModelViewSet):
     queryset = Reservation.objects.all()

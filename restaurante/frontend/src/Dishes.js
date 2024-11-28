@@ -1,7 +1,6 @@
-// src/Dishes.js
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Container, Typography, List, ListItem, ListItemText } from '@mui/material';
+import { Container, Typography, List, ListItem, ListItemText, ListItemAvatar, Avatar } from '@mui/material';
 
 function Dishes() {
   const [dishes, setDishes] = useState([]);
@@ -22,6 +21,9 @@ function Dishes() {
       <List>
         {dishes.map(dish => (
           <ListItem key={dish.id}>
+            <ListItemAvatar>
+              <Avatar src={dish.image} alt={dish.name} />
+            </ListItemAvatar>
             <ListItemText primary={`${dish.name} - $${dish.price}`} secondary={dish.description} />
           </ListItem>
         ))}

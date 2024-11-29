@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogContent, TextField, Button } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, TextField, Button, Box } from '@mui/material';
 
-const Chatbot = ({ open, handleClose }) => {
+const Chatbot = () => {
+  const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [responses, setResponses] = useState([]);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -133,8 +134,9 @@ const Chatbot = ({ open, handleClose }) => {
   };
 
   const handleOpen = () => {
+    setOpen(true);
     setMessage('');
-    setResponses([]);
+    setResponses([{ from: 'chatbot', text: '¡Bienvenido! ¿En qué puedo ayudarte hoy?' }]);
     setIsLoggingIn(false);
     setIsLoggedIn(false);
     setLoginData({ username: '', password: '' });
@@ -149,124 +151,149 @@ const Chatbot = ({ open, handleClose }) => {
     setIsReservationMade(false);
   };
 
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
-      <DialogContent>
-        <div style={{ height: '400px', overflowY: 'auto' }}>
-          {responses.map((res, index) => (
-            <div key={index} style={{ textAlign: res.from === 'user' ? 'right' : 'left' }}>
-              <p><strong>{res.from === 'user' ? 'Tú' : 'Chatbot'}:</strong> <span dangerouslySetInnerHTML={{ __html: res.text }} /></p>
-            </div>
-          ))}
-        </div>
-        {isLoggingIn ? (
-          <form onSubmit={handleLoginSubmit}>
+    <>
+      <Box sx={{ position: 'fixed', bottom: 16, right: 16 }}>
+        <img src="/chatbot.jpeg" alt="Chatbot" style={{ width: 60, height: 60, cursor: 'pointer' }} onClick={handleOpen} />
+      </Box>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          sx: {
+            position: 'fixed',
+            bottom: 0,
+            right: 0,
+            m: 0,
+            width: '300px',
+            height: '400px',
+          },
+        }}
+      >
+        <DialogTitle>
+          Chatbot
+        </DialogTitle>
+        <DialogContent>
+          <div style={{ height: '300px', overflowY: 'auto' }}>
+            {responses.map((res, index) => (
+              <div key={index} style={{ textAlign: res.from === 'user' ? 'right' : 'left' }}>
+                <p><strong>{res.from === 'user' ? 'Tú' : 'Chatbot'}:</strong> <span dangerouslySetInnerHTML={{ __html: res.text }} /></p>
+              </div>
+            ))}
+          </div>
+          {isLoggingIn ? (
+            <form onSubmit={handleLoginSubmit}>
+              <TextField
+                label="Nombre de usuario"
+                name="username"
+                value={loginData.username}
+                onChange={handleLoginChange}
+                fullWidth
+                margin="normal"
+                required
+              />
+              <TextField
+                label="Contraseña"
+                name="password"
+                type="password"
+                value={loginData.password}
+                onChange={handleLoginChange}
+                fullWidth
+                margin="normal"
+                required
+              />
+              <Button type="submit" variant="contained" color="primary" fullWidth>
+                Iniciar Sesión
+              </Button>
+            </form>
+          ) : isLoggedIn && !isReservationMade ? (
+            <form onSubmit={handleReservationSubmit}>
+              <TextField
+                label="Nombre"
+                name="name"
+                value={reservationData.name}
+                onChange={handleReservationChange}
+                fullWidth
+                margin="normal"
+                required
+              />
+              <TextField
+                label="Correo Electrónico"
+                name="email"
+                type="email"
+                value={reservationData.email}
+                onChange={handleReservationChange}
+                fullWidth
+                margin="normal"
+                required
+              />
+              <TextField
+                label="Teléfono"
+                name="phone"
+                value={reservationData.phone}
+                onChange={handleReservationChange}
+                fullWidth
+                margin="normal"
+                required
+              />
+              <TextField
+                label="Fecha"
+                name="date"
+                type="date"
+                value={reservationData.date}
+                onChange={handleReservationChange}
+                fullWidth
+                margin="normal"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                required
+              />
+              <TextField
+                label="Hora"
+                name="time"
+                type="time"
+                value={reservationData.time}
+                onChange={handleReservationChange}
+                fullWidth
+                margin="normal"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                required
+              />
+              <TextField
+                label="Número de Invitados"
+                name="guests"
+                type="number"
+                value={reservationData.guests}
+                onChange={handleReservationChange}
+                fullWidth
+                margin="normal"
+                required
+              />
+              <Button type="submit" variant="contained" color="primary" fullWidth>
+                Hacer Reserva
+              </Button>
+            </form>
+          ) : isReservationMade ? (
+            <p>Reserva realizada con éxito.</p>
+          ) : (
             <TextField
-              label="Nombre de usuario"
-              name="username"
-              value={loginData.username}
-              onChange={handleLoginChange}
+              label="Escribe un mensaje"
               fullWidth
-              margin="normal"
-              required
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
             />
-            <TextField
-              label="Contraseña"
-              name="password"
-              type="password"
-              value={loginData.password}
-              onChange={handleLoginChange}
-              fullWidth
-              margin="normal"
-              required
-            />
-            <Button type="submit" variant="contained" color="primary" fullWidth>
-              Iniciar Sesión
-            </Button>
-          </form>
-        ) : isLoggedIn && !isReservationMade ? (
-          <form onSubmit={handleReservationSubmit}>
-            <TextField
-              label="Nombre"
-              name="name"
-              value={reservationData.name}
-              onChange={handleReservationChange}
-              fullWidth
-              margin="normal"
-              required
-            />
-            <TextField
-              label="Correo Electrónico"
-              name="email"
-              type="email"
-              value={reservationData.email}
-              onChange={handleReservationChange}
-              fullWidth
-              margin="normal"
-              required
-            />
-            <TextField
-              label="Teléfono"
-              name="phone"
-              value={reservationData.phone}
-              onChange={handleReservationChange}
-              fullWidth
-              margin="normal"
-              required
-            />
-            <TextField
-              label="Fecha"
-              name="date"
-              type="date"
-              value={reservationData.date}
-              onChange={handleReservationChange}
-              fullWidth
-              margin="normal"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              required
-            />
-            <TextField
-              label="Hora"
-              name="time"
-              type="time"
-              value={reservationData.time}
-              onChange={handleReservationChange}
-              fullWidth
-              margin="normal"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              required
-            />
-            <TextField
-              label="Número de Invitados"
-              name="guests"
-              type="number"
-              value={reservationData.guests}
-              onChange={handleReservationChange}
-              fullWidth
-              margin="normal"
-              required
-            />
-            <Button type="submit" variant="contained" color="primary" fullWidth>
-              Hacer Reserva
-            </Button>
-          </form>
-        ) : isReservationMade ? (
-          <p>Reserva realizada con éxito.</p>
-        ) : (
-          <TextField
-            label="Escribe un mensaje"
-            fullWidth
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-          />
-        )}
-      </DialogContent>
-    </Dialog>
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 

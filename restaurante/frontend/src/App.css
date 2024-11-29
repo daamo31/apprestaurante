@@ -1,5 +1,11 @@
 .App {
   text-align: center;
+  background-image: "url('/background-image.jpeg')"; /* Cambia esta ruta a la de tu imagen de fondo */
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .App-logo {

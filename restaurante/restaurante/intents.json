@@ -22,7 +22,7 @@
     },
     {
       "tag": "listar_platos",
-      "patterns": ["¿Qué platos tienen?", "Lista de platos", "¿Qué hay en el menú?"],
+      "patterns": ["¿Qué platos tienen?", "Lista de platos", "¿Qué hay en el menú?","que menu hay", "que hay en el menu"],
       "responses": ["Estos son los platos disponibles: {platos}"]
     },
 

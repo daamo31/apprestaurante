@@ -9,8 +9,8 @@ from sklearn.naive_bayes import MultinomialNB
 from flask import Flask, request, jsonify
 from flask_cors import CORS  # Importar CORS
 from sqlalchemy import create_engine, MetaData, Table, select, func
-from sqlalchemy.engine import ResultProxy
 import os
+import re  # Importar re para expresiones regulares
 
 # Descargar recursos necesarios de NLTK
 nltk.download('punkt')
@@ -115,12 +115,20 @@ def get_response(ints, intents_json, message):
     for i in list_of_intents:
         if i['tag'] == tag:
             if tag == "precio_plato":
-                plato = message.split()[-2]  # Suponiendo que el nombre del plato es la última palabra
-                precio = obtener_precio_plato(plato)
-                result = f"El precio para {plato} es {precio}."
+                # Usar expresiones regulares para extraer el nombre del plato
+                match = re.search(r'precio de (.+)', message, re.IGNORECASE)
+                if match:
+                    plato = match.group(1).strip()
+                    if plato:
+                        precio, imagen = obtener_precio_plato(plato)
+                        result = f"El precio para {plato} es {precio}. <img src='{imagen}' alt='{plato}' />"
+                    else:
+                        result = "Por favor, proporciona el nombre del plato."
+                else:
+                    result = "Por favor, proporciona el nombre del plato."
             elif tag == "listar_platos":
                 platos = listar_platos()
-                result = f"Estos son los platos disponibles: {platos}"
+                result = f"Estos son los platos disponibles:<ul>{platos}</ul>"
             elif tag == "crear_usuario":
                 result = "Para crear un usuario, visita la siguiente página: <a href='http://localhost:3000/user-register'>crear usuario</a>"
             elif tag == "hacer_reserva":
@@ -140,13 +148,13 @@ def chatbot_response(text):
 def obtener_precio_plato(plato):
     productos_table = Table('menu_dish', metadata, autoload_with=engine)
     conn = engine.connect()
-    select_stmt = select(productos_table.c.price).where(func.lower(productos_table.c.name) == plato.lower())
+    select_stmt = select(productos_table.c.price, productos_table.c.image_url).where(func.lower(productos_table.c.name) == plato.lower())
     result = conn.execute(select_stmt).fetchone()
     conn.close()
     if result:
-        return f"{result[0]:.2f} €"  # Formatear el precio con dos decimales y el símbolo del euro
+        return f"{result[0]:.2f} €", result[1]  # Formatear el precio con dos decimales y devolver la URL de la imagen
     else:
-        return "no disponible"
+        return "no disponible", ""
 
 # Función para listar los platos
 def listar_platos():
@@ -154,9 +162,9 @@ def listar_platos():
     conn = engine.connect()
     select_stmt = select(productos_table.c.name)
     result = conn.execute(select_stmt)
-    platos = [row[0] for row in result]  # Acceder al nombre usando el índice
+    platos = "".join([f"<li>{row[0]}</li>" for row in result])  # Formatear cada plato como un elemento de lista
     conn.close()
-    return ", ".join(platos)
+    return platos
 
 # Crear la aplicación Flask
 app = Flask(__name__)

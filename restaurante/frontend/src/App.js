@@ -19,13 +19,18 @@ import ManageUsers from './ManageUsers';
 import TableMap from './TableMap';
 import Chatbot from './Chatbot';
 import Dashboard from './Dashboard';
+import './App.css'; // Importa el archivo CSS
 
 const AppBarStyled = styled(AppBar)({
   marginBottom: '20px',
+  backgroundColor: '#333', // Cambia este color al que prefieras
 });
 
 const ContainerStyled = styled(Container)({
   marginTop: '20px',
+  backgroundColor: 'rgba(255, 255, 255, 0.8)', // Fondo semitransparente
+  padding: '20px',
+  borderRadius: '8px',
 });
 
 function App() {
@@ -41,15 +46,25 @@ function App() {
 
   return (
     <AuthProvider>
-      <div className="App">
+      <div
+        className="App"
+        style={{
+          textAlign: 'center',
+          backgroundImage: 'url(/background-image.jpeg)', // Cambia esta ruta a la de tu imagen de fondo
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
         <AppBarStyled position="static">
           <Toolbar>
             <Typography variant="h6" style={{ flexGrow: 1 }}>
-              Restaurante
+              Restaurante Dani
             </Typography>
             <Button color="inherit" component={Link} to="/">Home</Button>
             <Button color="inherit" component={Link} to="/menu">Menú</Button>
-            <Button color="inherit" onClick={handleChatbotOpen}>Chatbot</Button> {/* Botón para abrir el chatbot */}
           </Toolbar>
         </AppBarStyled>
         <ContainerStyled>
@@ -76,6 +91,11 @@ function App() {
             <Route path="/table-map" element={<TableMap />} />
           </Routes>
         </ContainerStyled>
+        <footer style={{ marginTop: 'auto', padding: '10px', textAlign: 'center', backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
+          <Typography variant="body2" color="textSecondary">
+            © 2024 Restaurante Dani. Todos los derechos reservados.
+          </Typography>
+        </footer>
         <Chatbot open={chatbotOpen} handleClose={handleChatbotClose} /> {/* Componente del chatbot */}
       </div>
     </AuthProvider>

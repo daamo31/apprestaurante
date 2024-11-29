@@ -1,5 +1,5 @@
 // src/App.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, Routes, Link } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Button, Container } from '@mui/material';
 import { styled } from '@mui/system';
@@ -35,6 +35,15 @@ const ContainerStyled = styled(Container)({
 
 function App() {
   const [chatbotOpen, setChatbotOpen] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date().toLocaleTimeString());
+    }, 1000);
+
+    return () => clearInterval(timer); // Limpiar el intervalo al desmontar el componente
+  }, []);
 
   const handleChatbotOpen = () => {
     setChatbotOpen(true);
@@ -59,13 +68,16 @@ function App() {
         }}
       >
         <AppBarStyled position="static">
-          <Toolbar>
-            <Typography variant="h6" style={{ flexGrow: 1 }}>
-              Restaurante Dani
+        <Toolbar>
+            <Typography variant="h6" style={{ marginRight: '20px' }}>
+              {currentTime}
             </Typography>
-            <Button color="inherit" component={Link} to="/">Home</Button>
+             <Typography variant="h6" style={{ flexGrow: 1 }}>
+               Restaurante Dani
+            </Typography>
+             <Button color="inherit" component={Link} to="/">Home</Button>
             <Button color="inherit" component={Link} to="/menu">Menú</Button>
-          </Toolbar>
+            </Toolbar>
         </AppBarStyled>
         <ContainerStyled>
           <Routes>

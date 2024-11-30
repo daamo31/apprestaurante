@@ -3,10 +3,11 @@ from flask_cors import CORS
 import requests
 
 app = Flask(__name__)
-CORS(app)  # Habilitar CORS para todas las rutas por defecto
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})  # Permite solicitudes desde React
+ # Habilitar CORS para todas las rutas por defecto
 
 API_KEY = '8d81edcbd30b4760843130613242911'  # Reemplaza con tu API Key de WeatherAPI
-CITY = 'madrid'  # Reemplaza con tu ciudad
+CITY = 'Madrid'  # Reemplaza con tu ciudad
 
 @app.after_request
 def add_headers(response):
@@ -30,4 +31,4 @@ def get_weather():
     return jsonify(weather)
 
 if __name__ == '__main__':
-    app.run(debug=True,port =5000)
+    app.run(debug=True,port =5500)

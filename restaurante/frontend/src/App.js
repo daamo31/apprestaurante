@@ -50,7 +50,7 @@ function App() {
   useEffect(() => {
     const fetchWeather = async () => {
       try {
-        const response = await axios.get('/weather', {
+        const response = await axios.get('http://localhost:5500/weather', {
           headers: {
             'Accept': 'application/json',
           },

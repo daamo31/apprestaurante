@@ -6,6 +6,7 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import TableMap from './TableMap';
+import { useAuth } from './AuthContext'; // Importa useAuth
 
 /**
  * Componente para un ítem sortable (arrastrable).
@@ -89,6 +90,7 @@ function ReservationItem(props) {
  * Componente principal para gestionar las reservas.
  */
 function ManageReservations() {
+  const { isEmployeeLoggedIn } = useAuth(); // Usa useAuth para verificar si el empleado está logueado
   const [reservations, setReservations] = useState([]);
   const [selectedTable, setSelectedTable] = useState(null);
   const [selectedDate, setSelectedDate] = useState(''); // Estado para la fecha seleccionada
@@ -97,19 +99,21 @@ function ManageReservations() {
 
   // Efecto para obtener las reservas al cargar el componente
   useEffect(() => {
-    axios.get('http://localhost:8000/api/reservations/', {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('access_token')}`
-      }
-    })
-      .then(response => {
-        setReservations(response.data);
-        removeExpiredReservations(response.data);
+    if (isEmployeeLoggedIn) {
+      axios.get('http://localhost:8000/api/reservations/', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`
+        }
       })
-      .catch(error => {
-        setError('Hubo un error al obtener las reservas. Por favor, inténtalo de nuevo más tarde.');
-      });
-  }, []);
+        .then(response => {
+          setReservations(response.data);
+          removeExpiredReservations(response.data);
+        })
+        .catch(error => {
+          setError('Hubo un error al obtener las reservas. Por favor, inténtalo de nuevo más tarde.');
+        });
+    }
+  }, [isEmployeeLoggedIn]);
 
   /**
    * Función para eliminar reservas caducadas.
@@ -220,6 +224,10 @@ function ManageReservations() {
   const filteredReservations = selectedDate
     ? reservations.filter(reservation => reservation.date === selectedDate)
     : reservations;
+
+  if (!isEmployeeLoggedIn) {
+    return <Alert severity="error">Debes estar logueado para ver las reservas.</Alert>;
+  }
 
   return (
     <Container>

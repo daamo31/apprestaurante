@@ -4,23 +4,24 @@ import { Route, Routes, Link } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Button, Container } from '@mui/material';
 import { styled } from '@mui/system';
 import axios from 'axios'; // Importa Axios
-import { AuthProvider } from './AuthContext'; // Importa el AuthProvider
-import Menu from './Menu';
-import EmployeeSection from './EmployeeSection';
-import UserAccess from './UserAccess';
-import EmployeeLogin from './EmployeeLogin';
-import EmployeeRegister from './EmployeeRegister';
-import ManageReservations from './ManageReservations';
-import CreateDish from './CreateDish';
-import Reservations from './Reservations';
-import Dishes from './Dishes';
-import UserLogin from './UserLogin';
-import UserRegister from './UserRegister';
-import ManageUsers from './ManageUsers';
-import TableMap from './TableMap';
-import Chatbot from './Chatbot';
-import Dashboard from './Dashboard';
-import './App.css'; // Importa el archivo CSS
+import { AuthProvider } from './context/AuthContext'; // Importa el AuthProvider
+import Menu from './components/Menu';
+import EmployeeSection from './components/EmployeeSection';
+import UserAccess from './components/UserAccess';
+import EmployeeLogin from './components/EmployeeLogin';
+import EmployeeRegister from './components/EmployeeRegister';
+import ManageReservations from './components/ManageReservations';
+import CreateDish from './components/CreateDish';
+import Reservations from './components/Reservations';
+import Dishes from './components/Dishes';
+import UserLogin from './components/UserLogin';
+import UserRegister from './components/UserRegister';
+import ManageUsers from './components/ManageUsers';
+import TableMap from './components/TableMap';
+import Chatbot from './components/Chatbot';
+import Dashboard from './components/Dashboard';
+import './assets/App.css';
+
 
 const AppBarStyled = styled(AppBar)({
   marginBottom: '20px',
@@ -66,10 +67,7 @@ function App() {
     fetchWeather();
   }, []);
 
-  const handleChatbotOpen = () => {
-    setChatbotOpen(true);
-  };
-
+ 
   const handleChatbotClose = () => {
     setChatbotOpen(false);
   };

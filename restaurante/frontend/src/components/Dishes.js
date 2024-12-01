@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Container, Typography, List, ListItem, ListItemText, ListItemAvatar, Avatar, Button, Modal, Box, TextField } from '@mui/material';
-import { useAuth } from './AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 function Dishes() {
   const [dishes, setDishes] = useState([]);

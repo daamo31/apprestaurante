@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Paper, Typography, Button } from '@mui/material';
-import { tables } from './tablesConfig';
+import { tables } from '../config/tablesConfig';
 
 function TableMap({ reservations, setReservations, setError, selectedTable, setSelectedTable, selectedDate, guests }) {
   const handleTableSelect = (tableId, seats) => {

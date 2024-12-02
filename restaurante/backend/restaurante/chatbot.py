@@ -120,8 +120,8 @@ def get_response(ints, intents_json, message):
                 if match:
                     plato = match.group(1).strip()
                     if plato:
-                        precio, imagen = obtener_precio_plato(plato)
-                        result = f"El precio para {plato} es {precio}. <img src='{imagen}' alt='{plato}' />"
+                        precio = obtener_precio_plato(plato)
+                        result = f"El precio para {plato} es {precio}."
                     else:
                         result = "Por favor, proporciona el nombre del plato."
                 else:
@@ -148,13 +148,13 @@ def chatbot_response(text):
 def obtener_precio_plato(plato):
     productos_table = Table('menu_dish', metadata, autoload_with=engine)
     conn = engine.connect()
-    select_stmt = select(productos_table.c.price, productos_table.c.image_url).where(func.lower(productos_table.c.name) == plato.lower())
+    select_stmt = select(productos_table.c.price).where(func.lower(productos_table.c.name) == plato.lower())
     result = conn.execute(select_stmt).fetchone()
     conn.close()
     if result:
-        return f"{result[0]:.2f} €", result[1]  # Formatear el precio con dos decimales y devolver la URL de la imagen
+        return f"{result[0]:.2f} €"  # Formatear el precio con dos decimales
     else:
-        return "no disponible", ""
+        return "no disponible"
 
 # Función para listar los platos
 def listar_platos():

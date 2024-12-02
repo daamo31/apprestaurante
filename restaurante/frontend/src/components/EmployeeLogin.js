@@ -6,15 +6,18 @@ import { useAuth } from '../context/AuthContext';
 function EmployeeLogin() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { setIsEmployeeLoggedIn } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
+  const [error, setError] = useState('');
 
-  const handleLogin = (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
-    // Aquí puedes agregar la lógica para manejar el inicio de sesión del empleado
-    // Si el inicio de sesión es exitoso:
-    setIsEmployeeLoggedIn(true);
-    navigate('/dashboard');
+    try {
+      await login(username, password);
+      navigate('/dashboard');
+    } catch (err) {
+      setError('Error en el inicio de sesión. Por favor, verifica tus credenciales.');
+    }
   };
 
   return (
@@ -35,8 +38,9 @@ function EmployeeLogin() {
         />
         <button type="submit">Login</button>
       </form>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );
 }
 
-export default EmployeeLogin;  
+export default EmployeeLogin;

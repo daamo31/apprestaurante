@@ -37,7 +37,7 @@ class Dish(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     price = models.DecimalField(max_digits=6, decimal_places=2)
-    image = models.FileField(upload_to='dishes/', null=True, blank=True)  # Añadir campo de archivo
+    image = models.FileField(upload_to='dishes/', null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -49,8 +49,7 @@ class Reservation(models.Model):
     date = models.DateField()
     time = models.TimeField()
     guests = models.IntegerField()
-    table_id = models.IntegerField(null=True, blank=True)  # Añadir campo para la mesa
-
+    table = models.ForeignKey('Table', null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return f'Reservation for {self.name} on {self.date} at {self.time}'
@@ -62,7 +61,6 @@ class Order(models.Model):
 
     def __str__(self):
         return f'Order {self.id} by {self.user.username}'
-    
 
 class Table(models.Model):
     seats = models.IntegerField()
@@ -70,7 +68,10 @@ class Table(models.Model):
     def __str__(self):
         return f'Table {self.id} with {self.seats} seats'
 
-class Customer(models.Model):  
+class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone = models.CharField(max_length=15)
     address = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.user.username

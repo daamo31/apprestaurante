@@ -5,6 +5,10 @@ import { arrayMove } from '@dnd-kit/sortable';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
+/**
+ * Componente para un ítem sortable (arrastrable).
+ * @param {Object} props - Las propiedades del componente.
+ */
 function SortableItem(props) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: props.id });
 
@@ -26,6 +30,9 @@ function SortableItem(props) {
   );
 }
 
+/**
+ * Componente principal para gestionar las reservas.
+ */
 function Reservations() {
   const [formData, setFormData] = useState({
     name: '',
@@ -40,6 +47,7 @@ function Reservations() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
+  // Efecto para obtener las reservas al cargar el componente
   useEffect(() => {
     const token = localStorage.getItem('access_token');
     axios.get('http://localhost:8000/api/reservations/', {
@@ -56,6 +64,10 @@ function Reservations() {
       });
   }, []);
 
+  /**
+   * Maneja los cambios en los campos del formulario.
+   * @param {Object} e - Evento de cambio.
+   */
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -63,6 +75,10 @@ function Reservations() {
     });
   };
 
+  /**
+   * Maneja el envío del formulario.
+   * @param {Object} e - Evento de envío.
+   */
   const handleSubmit = (e) => {
     e.preventDefault();
     const reservationTime = formData.time;
@@ -103,6 +119,10 @@ function Reservations() {
       });
   };
 
+  /**
+   * Maneja el final del arrastre.
+   * @param {Object} event - Evento de arrastre.
+   */
   const handleDragEnd = (event) => {
     const { active, over } = event;
 
@@ -115,6 +135,10 @@ function Reservations() {
     }
   };
 
+  /**
+   * Obtiene la fecha mínima permitida para la reserva.
+   * @returns {string} - La fecha mínima en formato YYYY-MM-DD.
+   */
   const getMinDate = () => {
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -212,7 +236,6 @@ function Reservations() {
           Hacer Reserva
         </Button>
       </form>
-      
     </Container>
   );
 }

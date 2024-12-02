@@ -1,5 +1,4 @@
 // src/index.js
-// src/index.js
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -8,6 +7,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import App from './App';
 import theme from './config/theme';
 import './assets/App.css';
+import { AuthProvider } from './context/AuthContext';
 
 const container = document.getElementById('root');
 const root = createRoot(container);
@@ -17,7 +17,9 @@ root.render(
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
-        <App />
+        <AuthProvider>
+          <App />
+        </AuthProvider>
       </Router>
     </ThemeProvider>
   </React.StrictMode>

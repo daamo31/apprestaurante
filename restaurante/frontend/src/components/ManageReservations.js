@@ -8,10 +8,6 @@ import { CSS } from '@dnd-kit/utilities';
 import TableMap from './TableMap';
 import { useAuth } from '../context/AuthContext'; // Importa useAuth
 
-/**
- * Componente para un ítem sortable (arrastrable).
- * @param {Object} props - Las propiedades del componente.
- */
 function SortableItem(props) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: props.id });
 
@@ -23,15 +19,15 @@ function SortableItem(props) {
     border: '1px solid #ccc',
     borderRadius: '4px',
     display: 'flex',
-    flexDirection: 'column', // Cambia la dirección del flex a columna
-    alignItems: 'flex-start', // Alinea los elementos al inicio
+    flexDirection: 'column',
+    alignItems: 'flex-start',
   };
 
   const buttonContainerStyle = {
     display: 'flex',
     justifyContent: 'space-between',
     width: '100%',
-    marginTop: '10px', // Añade un margen superior para separar los botones del contenido
+    marginTop: '10px',
   };
 
   return (
@@ -49,10 +45,6 @@ function SortableItem(props) {
   );
 }
 
-/**
- * Componente para un ítem de reserva.
- * @param {Object} props - Las propiedades del componente.
- */
 function ReservationItem(props) {
   const style = {
     marginBottom: '10px',
@@ -60,15 +52,15 @@ function ReservationItem(props) {
     border: '1px solid #ccc',
     borderRadius: '4px',
     display: 'flex',
-    flexDirection: 'column', // Cambia la dirección del flex a columna
-    alignItems: 'flex-start', // Alinea los elementos al inicio
+    flexDirection: 'column',
+    alignItems: 'flex-start',
   };
 
   const buttonContainerStyle = {
     display: 'flex',
     justifyContent: 'space-between',
     width: '100%',
-    marginTop: '10px', // Añade un margen superior para separar los botones del contenido
+    marginTop: '10px',
   };
 
   return (
@@ -86,18 +78,14 @@ function ReservationItem(props) {
   );
 }
 
-/**
- * Componente principal para gestionar las reservas.
- */
 function ManageReservations() {
   const { isEmployeeLoggedIn } = useAuth(); // Usa useAuth para verificar si el empleado está logueado
   const [reservations, setReservations] = useState([]);
   const [selectedTable, setSelectedTable] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(''); // Estado para la fecha seleccionada
+  const [selectedDate, setSelectedDate] = useState('');
   const [error, setError] = useState(null);
-  const [editingReservation, setEditingReservation] = useState(null); // Estado para la reserva que se está editando
+  const [editingReservation, setEditingReservation] = useState(null);
 
-  // Efecto para obtener las reservas al cargar el componente
   useEffect(() => {
     if (isEmployeeLoggedIn) {
       axios.get('http://localhost:8000/api/reservations/', {
@@ -115,10 +103,6 @@ function ManageReservations() {
     }
   }, [isEmployeeLoggedIn]);
 
-  /**
-   * Función para eliminar reservas caducadas.
-   * @param {Array} reservations - Lista de reservas.
-   */
   const removeExpiredReservations = (reservations) => {
     const today = new Date().toISOString().split('T')[0];
     reservations.forEach(reservation => {
@@ -128,10 +112,6 @@ function ManageReservations() {
     });
   };
 
-  /**
-   * Función para manejar el final del arrastre.
-   * @param {Object} event - Evento de arrastre.
-   */
   const handleDragEnd = (event) => {
     const { active, over } = event;
 
@@ -146,7 +126,6 @@ function ManageReservations() {
       )
     );
 
-    // Enviar una solicitud al servidor para actualizar la reserva con la mesa seleccionada
     axios.put(`http://localhost:8000/api/reservations/${reservationId}/`, { table_id: tableId }, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('access_token')}`
@@ -161,18 +140,10 @@ function ManageReservations() {
       });
   };
 
-  /**
-   * Función para manejar la edición de una reserva.
-   * @param {Object} reservation - Reserva a editar.
-   */
   const handleEdit = (reservation) => {
     setEditingReservation(reservation);
   };
 
-  /**
-   * Función para manejar los cambios en el formulario de edición.
-   * @param {Object} e - Evento de cambio.
-   */
   const handleEditChange = (e) => {
     const { name, value } = e.target;
     setEditingReservation(prevState => ({
@@ -181,9 +152,6 @@ function ManageReservations() {
     }));
   };
 
-  /**
-   * Función para guardar los cambios de la edición.
-   */
   const handleEditSave = () => {
     axios.put(`http://localhost:8000/api/reservations/${editingReservation.id}/`, editingReservation, {
       headers: {
@@ -201,10 +169,6 @@ function ManageReservations() {
       });
   };
 
-  /**
-   * Función para manejar la eliminación de una reserva.
-   * @param {number} id - ID de la reserva a eliminar.
-   */
   const handleDelete = (id) => {
     axios.delete(`http://localhost:8000/api/reservations/${id}/`, {
       headers: {
@@ -278,11 +242,11 @@ function ManageReservations() {
         <TableMap
           reservations={filteredReservations}
           setReservations={setReservations}
-          setError={setError} // Pasar setError como prop
+          setError={setError}
           selectedTable={selectedTable}
-          setSelectedTable={setSelectedTable} // Pasar setSelectedTable como prop
-          selectedDate={selectedDate} // Pasar selectedDate como prop
-          guests={filteredReservations.length > 0 ? filteredReservations[0].guests : 0} // Pasar el número de comensales como prop
+          setSelectedTable={setSelectedTable}
+          selectedDate={selectedDate}
+          guests={filteredReservations.length > 0 ? filteredReservations[0].guests : 0}
         />
       )}
       {editingReservation && (

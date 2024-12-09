@@ -22,7 +22,6 @@ import Chatbot from './components/Chatbot';
 import Dashboard from './components/Dashboard';
 import './assets/App.css';
 
-
 const AppBarStyled = styled(AppBar)({
   marginBottom: '20px',
   backgroundColor: '#333', // Cambia este color al que prefieras
@@ -67,7 +66,6 @@ function App() {
     fetchWeather();
   }, []);
 
- 
   const handleChatbotClose = () => {
     setChatbotOpen(false);
   };
@@ -92,9 +90,12 @@ function App() {
               {currentTime}
             </Typography>
             {weather && (
-              <Typography variant="h6" style={{ marginRight: '20px' }}>
-                {weather.description}, {weather.temperature}°C
-              </Typography>
+              <div style={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}>
+                <img src={weather.icon} alt="Weather Icon" style={{ marginRight: '10px' }} />
+                <Typography variant="h6">
+                  {weather.temperature}°C
+                </Typography>
+              </div>
             )}
             <Typography variant="h6" style={{ flexGrow: 1 }}>
               Restaurante Dani

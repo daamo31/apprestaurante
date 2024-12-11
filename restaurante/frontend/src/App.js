@@ -1,26 +1,26 @@
 // src/App.js
-import React, { useState, useEffect } from 'react';
-import { Route, Routes, Link } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Button, Container } from '@mui/material';
+import { AppBar, Button, Container, Toolbar, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import axios from 'axios'; // Importa Axios
-import { AuthProvider } from './context/AuthContext'; // Importa el AuthProvider
-import Menu from './components/Menu';
-import EmployeeSection from './components/EmployeeSection';
-import UserAccess from './components/UserAccess';
+import React, { useEffect, useState } from 'react';
+import { Link, Route, Routes } from 'react-router-dom';
+import './assets/App.css';
+import Chatbot from './components/Chatbot';
+import CreateDish from './components/CreateDish';
+import Dashboard from './components/Dashboard';
+import Dishes from './components/Dishes';
 import EmployeeLogin from './components/EmployeeLogin';
 import EmployeeRegister from './components/EmployeeRegister';
+import EmployeeSection from './components/EmployeeSection';
 import ManageReservations from './components/ManageReservations';
-import CreateDish from './components/CreateDish';
+import ManageUsers from './components/ManageUsers';
+import Menu from './components/Menu';
 import Reservations from './components/Reservations';
-import Dishes from './components/Dishes';
+import TableMap from './components/TableMap';
+import UserAccess from './components/UserAccess';
 import UserLogin from './components/UserLogin';
 import UserRegister from './components/UserRegister';
-import ManageUsers from './components/ManageUsers';
-import TableMap from './components/TableMap';
-import Chatbot from './components/Chatbot';
-import Dashboard from './components/Dashboard';
-import './assets/App.css';
+import { AuthProvider } from './context/AuthContext'; // Importa el AuthProvider
 
 const AppBarStyled = styled(AppBar)({
   marginBottom: '20px',

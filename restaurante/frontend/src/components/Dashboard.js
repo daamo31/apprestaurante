@@ -9,8 +9,7 @@ function Dashboard() {
   const { isEmployeeLoggedIn } = useAuth();
 
   if (!isEmployeeLoggedIn) {
-    navigate('/employee-login');
-    return null;
+    return <h2>Debes iniciar sesión como empleado para acceder a esta sección.</h2>;
   }
 
   const handleCreateDish = () => {
@@ -26,7 +25,7 @@ function Dashboard() {
   };
 
   const handleCreateUser = () => {
-    navigate('/employee-register');
+    navigate('/create-user');
   };
 
   return (
@@ -53,7 +52,7 @@ function Dashboard() {
             Crear Usuario
           </Button>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={6} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <img src="/staff.jpeg" alt="Dashboard" style={{ width: '30%', height: 'auto', marginBottom: '20px' }} />
         </Grid>
       </Grid>

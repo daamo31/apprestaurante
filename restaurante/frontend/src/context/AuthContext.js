@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
       const token = localStorage.getItem('access_token');
       if (token) {
         try {
-          const response = await fetch('http://localhost:8000/api/verify-token/', {
+          const response = await fetch('http://localhost:8000/api/token/verify/', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }) => {
 
   const loginEmployee = async (username, password) => {
     try {
-      const response = await fetch('http://localhost:8000/api/employees/login/', {
+      const response = await fetch('http://localhost:8000/api/token/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ export const AuthProvider = ({ children }) => {
 
   const loginUser = async (username, password) => {
     try {
-      const response = await fetch('http://localhost:8000/api/users/login/', {
+      const response = await fetch('http://localhost:8000/api/token/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

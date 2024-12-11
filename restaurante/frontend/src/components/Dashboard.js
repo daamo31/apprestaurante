@@ -2,13 +2,17 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { Container, Typography, Button, Grid } from '@mui/material';
 
 function Dashboard() {
   const navigate = useNavigate();
   const { isEmployeeLoggedIn } = useAuth();
+
   if (!isEmployeeLoggedIn) {
-    return <h2>Debes iniciar sesión como empleado para acceder a esta sección.</h2>;
+    navigate('/employee-login');
+    return null;
   }
+
   const handleCreateDish = () => {
     navigate('/create-dish');
   };
@@ -21,13 +25,39 @@ function Dashboard() {
     navigate('/dishes');
   };
 
+  const handleCreateUser = () => {
+    navigate('/employee-register');
+  };
+
   return (
-    <div>
-      <h2>Dashboard</h2>
-      <button onClick={handleCreateDish}>Crear Plato</button>
-      <button onClick={handleViewManageReservations}>Ver Reservas</button>
-      <button onClick={handleViewDishes}>Ver Platos</button>
-    </div>
+    <Container>
+      <Typography variant="h4" gutterBottom>Dashboard</Typography>
+      <Grid container spacing={2} alignItems="center">
+        <Grid item xs={12} md={6}>
+          <Button onClick={handleCreateDish} variant="contained" color="primary" fullWidth>
+            Crear Plato
+          </Button>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Button onClick={handleViewDishes} variant="contained" color="primary" fullWidth>
+            Ver Platos
+          </Button>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Button onClick={handleViewManageReservations} variant="contained" color="primary" fullWidth>
+            Ver Reservas
+          </Button>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Button onClick={handleCreateUser} variant="contained" color="primary" fullWidth>
+            Crear Usuario
+          </Button>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <img src="/staff.jpeg" alt="Dashboard" style={{ width: '30%', height: 'auto', marginBottom: '20px' }} />
+        </Grid>
+      </Grid>
+    </Container>
   );
 }
 

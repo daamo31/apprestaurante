@@ -1,7 +1,9 @@
 // src/App.js
+
+// Importaciones necesarias desde React, Material-UI, Axios y React Router
 import { AppBar, Button, Container, Toolbar, Typography } from '@mui/material';
 import { styled } from '@mui/system';
-import axios from 'axios'; // Importa Axios
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, Route, Routes } from 'react-router-dom';
 import './assets/App.css';
@@ -22,6 +24,7 @@ import UserLogin from './components/UserLogin';
 import UserRegister from './components/UserRegister';
 import { AuthProvider } from './context/AuthContext'; // Importa el AuthProvider
 
+// Estilos personalizados para AppBar y Container utilizando Material-UI
 const AppBarStyled = styled(AppBar)({
   marginBottom: '20px',
   backgroundColor: '#333', // Cambia este color al que prefieras
@@ -34,11 +37,14 @@ const ContainerStyled = styled(Container)({
   borderRadius: '8px',
 });
 
+// Componente principal de la aplicación
 function App() {
+  // Estados para manejar el estado del chatbot, la hora actual y el clima
   const [chatbotOpen, setChatbotOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
   const [weather, setWeather] = useState(null);
 
+  // Efecto para actualizar la hora actual cada segundo
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date().toLocaleTimeString());
@@ -47,6 +53,7 @@ function App() {
     return () => clearInterval(timer); // Limpiar el intervalo al desmontar el componente
   }, []);
 
+  // Efecto para obtener los datos del clima desde un servidor
   useEffect(() => {
     const fetchWeather = async () => {
       try {
@@ -66,11 +73,13 @@ function App() {
     fetchWeather();
   }, []);
 
+  // Función para cerrar el chatbot
   const handleChatbotClose = () => {
     setChatbotOpen(false);
   };
 
   return (
+    // Proveedor de contexto de autenticación que envuelve toda la aplicación
     <AuthProvider>
       <div
         className="App"
@@ -84,6 +93,7 @@ function App() {
           flexDirection: 'column',
         }}
       >
+        {/* Barra de navegación superior */}
         <AppBarStyled position="static">
           <Toolbar>
             <Typography variant="h6" style={{ marginRight: '20px' }}>
@@ -104,6 +114,8 @@ function App() {
             <Button color="inherit" component={Link} to="/menu">Menú</Button>
           </Toolbar>
         </AppBarStyled>
+
+        {/* Contenedor principal de la aplicación */}
         <ContainerStyled>
           <Routes>
             <Route exact path="/" element={
@@ -128,12 +140,16 @@ function App() {
             <Route path="/table-map" element={<TableMap />} />
           </Routes>
         </ContainerStyled>
+
+        {/* Pie de página */}
         <footer style={{ marginTop: 'auto', padding: '10px', textAlign: 'center', backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
           <Typography variant="body2" color="textSecondary">
             © 2024 Restaurante Dani. Todos los derechos reservados.
           </Typography>
         </footer>
-        <Chatbot open={chatbotOpen} handleClose={handleChatbotClose} /> {/* Componente del chatbot */}
+
+        {/* Componente del chatbot */}
+        <Chatbot open={chatbotOpen} handleClose={handleChatbotClose} />
       </div>
     </AuthProvider>
   );

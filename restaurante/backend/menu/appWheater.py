@@ -15,18 +15,18 @@ def add_headers(response):
 
 @app.route('/')
 def home():
-    return "Weather API is running"
+    return "Weather API is running"  # Ruta principal que devuelve un mensaje indicando que la API está en funcionamiento
 
 @app.route('/weather', methods=['GET'])
 def get_weather():
-    url = f'http://api.weatherapi.com/v1/current.json?key={API_KEY}&q={CITY}&aqi=no'
-    response = requests.get(url)
-    data = response.json()
+    url = f'http://api.weatherapi.com/v1/current.json?key={API_KEY}&q={CITY}&aqi=no'  # URL de la API de WeatherAPI
+    response = requests.get(url)  # Realiza una solicitud GET a la API de WeatherAPI
+    data = response.json()  # Convierte la respuesta en formato JSON
     weather = {
-        'icon': data['current']['condition']['icon'],
-        'temperature': data['current']['temp_c']
+        'icon': data['current']['condition']['icon'],  # Extrae el icono del clima actual
+        'temperature': data['current']['temp_c']  # Extrae la temperatura actual en grados Celsius
     }
-    return jsonify(weather)
+    return jsonify(weather)  # Devuelve los datos del clima en formato JSON
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5500)
+    app.run(debug=True, port=5500)  # Ejecuta la aplicación Flask en modo de depuración en el puerto 5500

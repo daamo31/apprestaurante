@@ -1,7 +1,12 @@
+// src/Chatbot.js
+
+// Importaciones necesarias desde React y Material-UI
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, TextField, Button, Box } from '@mui/material';
 
+// Componente principal del chatbot
 const Chatbot = () => {
+  // Estados para manejar el estado del chatbot, mensajes, inicio de sesión y reservas
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [responses, setResponses] = useState([]);
@@ -18,12 +23,14 @@ const Chatbot = () => {
   });
   const [isReservationMade, setIsReservationMade] = useState(false);
 
+  // Efecto para manejar el estado de inicio de sesión
   useEffect(() => {
     if (isLoggedIn) {
       setIsLoggingIn(false);
     }
   }, [isLoggedIn]);
 
+  // Función para enviar un mensaje al chatbot
   const handleSendMessage = async () => {
     if (!message.trim()) return;
 
@@ -50,6 +57,7 @@ const Chatbot = () => {
     }
   };
 
+  // Función para manejar cambios en los campos de inicio de sesión
   const handleLoginChange = (e) => {
     setLoginData({
       ...loginData,
@@ -57,6 +65,7 @@ const Chatbot = () => {
     });
   };
 
+  // Función para manejar el envío del formulario de inicio de sesión
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
 
@@ -82,6 +91,7 @@ const Chatbot = () => {
     }
   };
 
+  // Función para manejar cambios en los campos de reserva
   const handleReservationChange = (e) => {
     setReservationData({
       ...reservationData,
@@ -89,6 +99,7 @@ const Chatbot = () => {
     });
   };
 
+  // Función para manejar el envío del formulario de reserva
   const handleReservationSubmit = async (e) => {
     e.preventDefault();
 
@@ -133,6 +144,7 @@ const Chatbot = () => {
     }
   };
 
+  // Función para abrir el chatbot
   const handleOpen = () => {
     setOpen(true);
     setMessage('');
@@ -151,15 +163,18 @@ const Chatbot = () => {
     setIsReservationMade(false);
   };
 
+  // Función para cerrar el chatbot
   const handleClose = () => {
     setOpen(false);
   };
 
   return (
     <>
+      {/* Botón para abrir el chatbot */}
       <Box sx={{ position: 'fixed', bottom: 16, right: 16 }}>
         <img src="/chatbot.jpeg" alt="Chatbot" style={{ width: 60, height: 60, cursor: 'pointer' }} onClick={handleOpen} />
       </Box>
+      {/* Diálogo del chatbot */}
       <Dialog
         open={open}
         onClose={handleClose}

@@ -3,6 +3,7 @@ import { Grid, Paper, Typography, Button } from '@mui/material';
 import { tables } from '../config/tablesConfig';
 
 function TableMap({ reservations, setReservations, setError, selectedTable, setSelectedTable, selectedDate, guests }) {
+  // Función para manejar la selección de una mesa
   const handleTableSelect = (tableId, seats) => {
     if (guests > seats) {
       setError('El número de comensales es mayor que los asientos disponibles en la mesa seleccionada.');
@@ -11,6 +12,7 @@ function TableMap({ reservations, setReservations, setError, selectedTable, setS
     setSelectedTable(tableId);
   };
 
+  // Función para obtener la reserva de una mesa específica
   const getTableReservation = (tableId) => {
     return reservations.find(reservation => reservation.table_id === tableId && reservation.date === selectedDate);
   };

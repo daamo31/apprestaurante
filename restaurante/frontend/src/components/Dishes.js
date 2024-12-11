@@ -3,7 +3,9 @@ import axios from 'axios';
 import { Container, Typography, List, ListItem, ListItemText, ListItemAvatar, Avatar, Button, Modal, Box, TextField } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
 
+// Componente principal para mostrar y gestionar los platos
 function Dishes() {
+  // Estados para manejar los platos, el plato seleccionado, el plato en edición y los valores de los campos del formulario
   const [dishes, setDishes] = useState([]);
   const [selectedDish, setSelectedDish] = useState(null);
   const [editingDish, setEditingDish] = useState(null);
@@ -13,6 +15,7 @@ function Dishes() {
   const [image, setImage] = useState(null);
   const { isEmployeeLoggedIn } = useAuth();
 
+  // Efecto para obtener los platos desde el servidor al montar el componente
   useEffect(() => {
     axios.get('http://localhost:8000/api/dishes/')
       .then(response => {
@@ -23,6 +26,7 @@ function Dishes() {
       });
   }, []);
 
+  // Función para manejar la eliminación de un plato
   const handleDelete = (id) => {
     axios.delete(`http://localhost:8000/api/dishes/${id}/`)
       .then(response => {
@@ -33,6 +37,7 @@ function Dishes() {
       });
   };
 
+  // Función para manejar la edición de un plato
   const handleEdit = (dish) => {
     setEditingDish(dish);
     setName(dish.name);
@@ -41,6 +46,7 @@ function Dishes() {
     setImage(null); // Reset the image field
   };
 
+  // Función para cancelar la edición de un plato
   const handleCancelEdit = () => {
     setEditingDish(null);
     setName('');
@@ -49,6 +55,7 @@ function Dishes() {
     setImage(null);
   };
 
+  // Función para manejar el envío del formulario de edición de un plato
   const handleSubmitEdit = (event) => {
     event.preventDefault();
     const formData = new FormData();
@@ -73,14 +80,17 @@ function Dishes() {
     });
   };
 
+  // Función para abrir el modal con los detalles de un plato
   const handleOpenModal = (dish) => {
     setSelectedDish(dish);
   };
 
+  // Función para cerrar el modal
   const handleCloseModal = () => {
     setSelectedDish(null);
   };
 
+  // Renderizado del componente Dishes
   return (
     <Container>
       <Typography variant="h4" gutterBottom>Dishes</Typography>

@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Container, Typography, TextField, Button } from '@mui/material';
 
+// Componente para crear un nuevo plato
 function CreateDish() {
+  // Estados para manejar los valores de los campos del formulario
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [image, setImage] = useState(null);
 
+  // Función para manejar el envío del formulario
   const handleSubmit = (event) => {
     event.preventDefault();
     const formData = new FormData();
@@ -16,6 +19,7 @@ function CreateDish() {
     formData.append('price', price);
     formData.append('image', image);
 
+    // Enviar los datos del formulario al servidor
     axios.post('http://localhost:8000/api/dishes/upload_dish/', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'

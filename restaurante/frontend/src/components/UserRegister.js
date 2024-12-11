@@ -6,10 +6,11 @@ function UserRegister() {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
-  });
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
+  }); // Estado para manejar los datos del formulario
+  const [error, setError] = useState(null); // Estado para manejar los errores
+  const [success, setSuccess] = useState(null); // Estado para manejar los mensajes de éxito
 
+  // Función para manejar los cambios en los campos del formulario
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -17,6 +18,7 @@ function UserRegister() {
     });
   };
 
+  // Función para manejar el envío del formulario de registro
   const handleSubmit = (e) => {
     e.preventDefault();
     axios.post('http://localhost:8000/api/users/', formData)
@@ -26,7 +28,7 @@ function UserRegister() {
         setFormData({
           username: '',
           password: '',
-        });
+        }); // Restablecer los campos del formulario
       })
       .catch(error => {
         console.error('There was an error registering the user!', error);
@@ -38,8 +40,8 @@ function UserRegister() {
   return (
     <Container maxWidth="sm">
       <Typography variant="h4" gutterBottom>User Register</Typography>
-      {error && <Alert severity="error">{error}</Alert>}
-      {success && <Alert severity="success">{success}</Alert>}
+      {error && <Alert severity="error">{error}</Alert>} {/* Mostrar mensaje de error si existe */}
+      {success && <Alert severity="success">{success}</Alert>} {/* Mostrar mensaje de éxito si existe */}
       <form onSubmit={handleSubmit}>
         <TextField
           label="Username"

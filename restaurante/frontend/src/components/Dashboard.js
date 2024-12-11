@@ -1,17 +1,22 @@
 // src/Dashboard.js
+
+// Importaciones necesarias desde React, React Router y Material-UI
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Container, Typography, Button, Grid } from '@mui/material';
 
+// Componente principal del Dashboard
 function Dashboard() {
   const navigate = useNavigate();
   const { isEmployeeLoggedIn } = useAuth();
 
+  // Si el usuario no ha iniciado sesión como empleado, muestra un mensaje de advertencia
   if (!isEmployeeLoggedIn) {
     return <h2>Debes iniciar sesión como empleado para acceder a esta sección.</h2>;
   }
 
+  // Funciones para manejar la navegación a diferentes secciones del Dashboard
   const handleCreateDish = () => {
     navigate('/create-dish');
   };
@@ -28,6 +33,7 @@ function Dashboard() {
     navigate('/create-user');
   };
 
+  // Renderizado del componente Dashboard
   return (
     <Container>
       <Typography variant="h4" gutterBottom>Dashboard</Typography>

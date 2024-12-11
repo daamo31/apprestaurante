@@ -8,6 +8,7 @@ import { CSS } from '@dnd-kit/utilities';
 import TableMap from './TableMap';
 import { useAuth } from '../context/AuthContext'; // Importa useAuth
 
+// Componente para elementos ordenables en la lista de reservas
 function SortableItem(props) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: props.id });
 
@@ -45,6 +46,7 @@ function SortableItem(props) {
   );
 }
 
+// Componente para mostrar los elementos de la lista de reservas
 function ReservationItem(props) {
   const style = {
     marginBottom: '10px',
@@ -78,6 +80,7 @@ function ReservationItem(props) {
   );
 }
 
+// Componente principal para gestionar las reservas
 function ManageReservations() {
   const { isEmployeeLoggedIn } = useAuth(); // Usa useAuth para verificar si el empleado está logueado
   const [reservations, setReservations] = useState([]);
@@ -86,6 +89,7 @@ function ManageReservations() {
   const [error, setError] = useState(null);
   const [editingReservation, setEditingReservation] = useState(null);
 
+  // Efecto para obtener las reservas desde el servidor al montar el componente
   useEffect(() => {
     if (isEmployeeLoggedIn) {
       axios.get('http://localhost:8000/api/reservations/', {
@@ -103,6 +107,7 @@ function ManageReservations() {
     }
   }, [isEmployeeLoggedIn]);
 
+  // Función para eliminar reservas expiradas
   const removeExpiredReservations = (reservations) => {
     const today = new Date().toISOString().split('T')[0];
     reservations.forEach(reservation => {
@@ -112,6 +117,7 @@ function ManageReservations() {
     });
   };
 
+  // Función para manejar el final del arrastre de una reserva
   const handleDragEnd = (event) => {
     const { active, over } = event;
 
@@ -140,10 +146,12 @@ function ManageReservations() {
       });
   };
 
+  // Función para manejar la edición de una reserva
   const handleEdit = (reservation) => {
     setEditingReservation(reservation);
   };
 
+  // Función para manejar los cambios en los campos de edición de una reserva
   const handleEditChange = (e) => {
     const { name, value } = e.target;
     setEditingReservation(prevState => ({
@@ -152,6 +160,7 @@ function ManageReservations() {
     }));
   };
 
+  // Función para guardar los cambios de una reserva editada
   const handleEditSave = () => {
     axios.put(`http://localhost:8000/api/reservations/${editingReservation.id}/`, editingReservation, {
       headers: {
@@ -169,6 +178,7 @@ function ManageReservations() {
       });
   };
 
+  // Función para manejar la eliminación de una reserva
   const handleDelete = (id) => {
     axios.delete(`http://localhost:8000/api/reservations/${id}/`, {
       headers: {
@@ -185,6 +195,7 @@ function ManageReservations() {
       });
   };
 
+  // Filtrar reservas por fecha seleccionada
   const filteredReservations = selectedDate
     ? reservations.filter(reservation => reservation.date === selectedDate)
     : reservations;

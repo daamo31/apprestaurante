@@ -4,23 +4,26 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 function EmployeeSection() {
-  const { isEmployeeLoggedIn, loginEmployee } = useAuth();
-  const [showLogin, setShowLogin] = useState(false);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const { isEmployeeLoggedIn, loginEmployee } = useAuth(); // Usa useAuth para verificar si el empleado está logueado y para iniciar sesión
+  const [showLogin, setShowLogin] = useState(false); // Estado para controlar la visibilidad del formulario de inicio de sesión
+  const [username, setUsername] = useState(''); // Estado para manejar el nombre de usuario
+  const [password, setPassword] = useState(''); // Estado para manejar la contraseña
+  const [error, setError] = useState(''); // Estado para manejar los errores de inicio de sesión
+  const navigate = useNavigate(); // Hook para la navegación
 
+  // Efecto para redirigir al dashboard si el empleado ya ha iniciado sesión
   useEffect(() => {
     if (isEmployeeLoggedIn) {
       navigate('/dashboard');
     }
   }, [isEmployeeLoggedIn, navigate]);
 
+  // Función para mostrar el formulario de inicio de sesión
   const handleLoginClick = () => {
     setShowLogin(true);
   };
 
+  // Función para manejar el envío del formulario de inicio de sesión
   const handleLogin = async (event) => {
     event.preventDefault();
     try {

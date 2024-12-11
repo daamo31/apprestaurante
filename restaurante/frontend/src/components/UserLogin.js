@@ -8,10 +8,11 @@ function UserLogin() {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
-  });
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
+  }); // Estado para manejar los datos del formulario
+  const [error, setError] = useState(null); // Estado para manejar los errores
+  const navigate = useNavigate(); // Hook para la navegación
 
+  // Función para manejar los cambios en los campos del formulario
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -19,6 +20,7 @@ function UserLogin() {
     });
   };
 
+  // Función para manejar el envío del formulario de inicio de sesión
   const handleSubmit = (e) => {
     e.preventDefault();
     axios.post('http://localhost:8000/api/users/login/', formData)
@@ -36,7 +38,7 @@ function UserLogin() {
   return (
     <Container maxWidth="sm">
       <Typography variant="h4" gutterBottom>User Login</Typography>
-      {error && <Alert severity="error">{error}</Alert>}
+      {error && <Alert severity="error">{error}</Alert>} {/* Mostrar mensaje de error si existe */}
       <form onSubmit={handleSubmit}>
         <TextField
           label="Username"

@@ -5,12 +5,13 @@ import { useAuth } from '../context/AuthContext';
 import { Container, TextField, Button, Typography, Alert } from '@mui/material';
 
 function EmployeeLogin() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const { loginEmployee } = useAuth();
-  const navigate = useNavigate();
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState(''); // Estado para manejar el nombre de usuario
+  const [password, setPassword] = useState(''); // Estado para manejar la contraseña
+  const { loginEmployee } = useAuth(); // Usa useAuth para acceder a la función de inicio de sesión de empleados
+  const navigate = useNavigate(); // Hook para la navegación
+  const [error, setError] = useState(''); // Estado para manejar los errores de inicio de sesión
 
+  // Función para manejar el envío del formulario de inicio de sesión
   const handleLogin = async (event) => {
     event.preventDefault();
     try {

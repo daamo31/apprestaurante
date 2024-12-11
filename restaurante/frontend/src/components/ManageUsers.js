@@ -4,10 +4,11 @@ import { Container, Typography, Button, List, ListItem, ListItemText, Alert } fr
 import { Link } from 'react-router-dom'; 
 
 function ManageUsers() {
-  const [dishes, setDishes] = useState([]);
-  const [order, setOrder] = useState([]);
-  const [error, setError] = useState(null);
+  const [dishes, setDishes] = useState([]); // Estado para manejar la lista de platos
+  const [order, setOrder] = useState([]); // Estado para manejar el pedido actual
+  const [error, setError] = useState(null); // Estado para manejar los errores
 
+  // Efecto para obtener los platos desde el servidor al montar el componente
   useEffect(() => {
     axios.get('http://localhost:8000/api/dishes/')
       .then(response => {
@@ -19,10 +20,12 @@ function ManageUsers() {
       });
   }, []);
 
+  // Función para agregar un plato al pedido
   const handleAddToOrder = (dish) => {
     setOrder([...order, dish]);
   };
 
+  // Función para realizar el pedido
   const handlePlaceOrder = () => {
     const token = localStorage.getItem('access_token');
     const dishIds = order.map(dish => dish.id); // Obtener solo los IDs de los platos
@@ -33,7 +36,7 @@ function ManageUsers() {
     })
       .then(response => {
         alert('Order placed successfully!');
-        setOrder([]);
+        setOrder([]); // Restablecer el pedido
       })
       .catch(error => {
         console.error('There was an error placing the order!', error);

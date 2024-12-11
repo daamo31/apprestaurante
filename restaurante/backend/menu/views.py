@@ -9,12 +9,14 @@ from sqlalchemy import create_engine, MetaData, Table as SQLATable, select
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.shortcuts import render, redirect
 from .forms import DishForm
+
 # Conectar a la base de datos SQLite
 DATABASE_URI = 'sqlite:///db.sqlite3'  
 engine = create_engine(DATABASE_URI)
 metadata = MetaData()
 metadata.reflect(bind=engine)
 
+# Función para obtener los platos desde la base de datos
 def get_dishes(request):
     productos_table = SQLATable('menu_dish', metadata, autoload_with=engine)
     conn = engine.connect()
@@ -24,6 +26,7 @@ def get_dishes(request):
     conn.close()
     return JsonResponse(dishes, safe=False)
 
+# Vista de conjunto de vistas para el modelo User
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -42,6 +45,7 @@ class UserViewSet(viewsets.ModelViewSet):
             })
         return Response({'error': 'Invalid credentials'}, status=400)
 
+# Vista de conjunto de vistas para el modelo Employee
 class EmployeeViewSet(viewsets.ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
@@ -60,6 +64,7 @@ class EmployeeViewSet(viewsets.ModelViewSet):
             })
         return Response({'error': 'Invalid credentials'}, status=400)
 
+# Vista de conjunto de vistas para el modelo Dish
 class DishViewSet(viewsets.ModelViewSet):
     queryset = Dish.objects.all()
     serializer_class = DishSerializer
@@ -78,6 +83,7 @@ class DishViewSet(viewsets.ModelViewSet):
     def success(self, request):
         return HttpResponse('Successfully uploaded')
 
+# Vista de conjunto de vistas para el modelo Reservation
 class ReservationViewSet(viewsets.ModelViewSet):
     queryset = Reservation.objects.all()
     serializer_class = ReservationSerializer
@@ -103,6 +109,7 @@ class ReservationViewSet(viewsets.ModelViewSet):
         reservation.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+# Vista de conjunto de vistas para el modelo Order
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
@@ -112,14 +119,17 @@ class OrderViewSet(viewsets.ModelViewSet):
         print(request.data)  # Verifica los datos recibidos
         return super().create(request, *args, **kwargs)
 
+# Vista de conjunto de vistas para el modelo Table
 class TableViewSet(viewsets.ModelViewSet):
     queryset = Table.objects.all()
     serializer_class = TableSerializer
 
+# Vista de conjunto de vistas para el modelo Customer
 class CustomerViewSet(viewsets.ModelViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
 
+# Vista de lista para el modelo Table
 class TableListView(generics.ListAPIView):
     queryset = Table.objects.all()
     serializer_class = TableSerializer
